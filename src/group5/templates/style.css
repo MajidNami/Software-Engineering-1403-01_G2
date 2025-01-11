@@ -1,0 +1,42 @@
+/* General Layout */
+body {
+    background: linear-gradient(135deg, #F9F7F7, #DBE2EF);
+    font-family: "Vazir", "tahoma", "ubuntu" !important;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    direction: rtl;
+    overflow: hidden;
+    color: #112D4E;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(90deg, #3F72AF, #112D4E); /* گرادیان زیباتر */
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.navbar i {
+    color: #F9F7F7;
+    margin-right: 10px;
+}
