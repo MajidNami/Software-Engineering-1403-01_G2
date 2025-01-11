@@ -17,3 +17,71 @@ inputText.addEventListener("keydown", (e) => {
         form.dispatchEvent(new Event("submit")); // Programmatically submit the form
     }
 });
+
+function displayWrongWords(wrongWords) {
+    sidebar.innerHTML = "<h3>Found Mistakes</h3>";
+
+    wrongWords.forEach((wordObj, index) => {
+        // Create a card for the word
+        const card = document.createElement("div");
+        card.className = "wrong-word-card";
+        card.id = `wrong-word-card-${index}`; // Assign a unique ID to each card
+
+        // Display the incorrect word
+        const wordElement = document.createElement("h4");
+        wordElement.textContent = wordObj[0]; // Incorrect word
+        card.appendChild(wordElement);
+
+        // Create buttons for suggestions
+        const buttonContainer = document.createElement("div");
+        buttonContainer.className = "button-container";
+
+        wordObj[1].forEach((suggestion) => {
+            const button = document.createElement("button");
+            button.textContent = suggestion; // Suggestion text
+            button.className = "card-button";
+            button.addEventListener("click", () => {
+                replaceWordInInput(wordObj[0], suggestion, `wrong-word-card-${index}`);
+            });
+            buttonContainer.appendChild(button);
+        });
+
+        card.appendChild(buttonContainer);
+        sidebar.appendChild(card);
+    });
+}
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = inputText.value.trim();
+
+    if (!text) {
+        alert("Please enter some text!");
+        return;
+    }
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error connecting to the server");
+        }
+
+        const result = await response.json();
+
+        if (result && result.wrongWords && result.wrongWords.length > 0) {
+            displayWrongWords(result.wrongWords);
+        } else {
+            sidebar.innerHTML = "<p>No mistakes found.</p>";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        sidebar.innerHTML = "<p>Error receiving a response from the server.</p>";
+    }
+});
