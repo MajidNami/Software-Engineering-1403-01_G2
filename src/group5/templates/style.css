@@ -42,3 +42,23 @@ body {
 }
 
 
+/* Header */
+.header {
+    text-align: center;
+    padding: 100px 20px 40px;
+    background-color: #3F72AF;
+    color: white;
+    border-bottom: 5px solid #112D4E;
+    border-radius: 0 0 15px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.header p {
+    margin: 10px 0 0;
+    font-size: 18px;
+    color: #DBE2EF;
+}
