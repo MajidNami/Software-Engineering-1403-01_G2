@@ -1,4 +1,4 @@
-const API_URL = "http://example/spellcheck";
+const API_URL = "http://localhost:3000/spellcheck";
 
 const form = document.getElementById("textForm");
 const inputText = document.getElementById("inputText");
@@ -19,7 +19,7 @@ inputText.addEventListener("keydown", (e) => {
 });
 
 function displayWrongWords(wrongWords) {
-    sidebar.innerHTML = "<h3>Found Mistakes</h3>";
+    sidebar.innerHTML = "<h3>غلط های پیدا شده</h3>";
 
     wrongWords.forEach((wordObj, index) => {
         // Create a card for the word
@@ -69,7 +69,7 @@ form.addEventListener("submit", async (e) => {
     const text = inputText.value.trim();
 
     if (!text) {
-        alert("Please enter some text!");
+        alert("لطفا متنی وارد کنید!");
         return;
     }
 
@@ -83,7 +83,7 @@ form.addEventListener("submit", async (e) => {
         });
 
         if (!response.ok) {
-            throw new Error("Error connecting to the server");
+            throw new Error("خطا در ارتباط با سرور");
         }
 
         const result = await response.json();
@@ -91,10 +91,10 @@ form.addEventListener("submit", async (e) => {
         if (result && result.wrongWords && result.wrongWords.length > 0) {
             displayWrongWords(result.wrongWords);
         } else {
-            sidebar.innerHTML = "<p>No mistakes found.</p>";
+            sidebar.innerHTML = "<p>هیچ کلمه اشتباهی یافت نشد.</p>";
         }
     } catch (error) {
         console.error("Error:", error);
-        sidebar.innerHTML = "<p>Error receiving a response from the server.</p>";
+        sidebar.innerHTML = "<p>خطا در دریافت پاسخ از سرور.</p>";
     }
 });
