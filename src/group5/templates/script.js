@@ -51,6 +51,19 @@ function displayWrongWords(wrongWords) {
     });
 }
 
+function replaceWordInInput(oldWord, newWord, cardId) {
+    // Replace the word in the text
+    const text = inputText.value;
+    const updatedText = text.split(' ').map(word => word === oldWord ? newWord : word).join(' ');
+    inputText.value = updatedText;
+
+    // Remove the card from the sidebar
+    const card = document.getElementById(cardId);
+    if (card) {
+        card.remove();
+    }
+}
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = inputText.value.trim();
