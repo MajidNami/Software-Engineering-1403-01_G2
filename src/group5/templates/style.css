@@ -196,3 +196,40 @@ button:hover {
     background-color: #112D4E; /* Change background color on hover */
     transform: scale(1.1); /* Slightly enlarge button on hover */
 }
+
+/* Add File Button */
+.addFileButton {
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #6C63FF, #3F72AF);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.addFileButton i {
+    margin-right: 10px;
+}
+
+.addFileButton:hover {
+    background: linear-gradient(45deg, #3F72AF, #6C63FF);
+    transform: scale(1.05);
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
