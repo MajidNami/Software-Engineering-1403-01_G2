@@ -1,0 +1,198 @@
+/* General Layout */
+body {
+    background: linear-gradient(135deg, #F9F7F7, #DBE2EF);
+    font-family: "Vazir", "tahoma", "ubuntu" !important;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    direction: rtl;
+    overflow: hidden;
+    color: #112D4E;
+}
+
+/* Navbar */
+.navbar {
+    background: linear-gradient(90deg, #3F72AF, #112D4E); /* گرادیان زیباتر */
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+}
+
+.navbar i {
+    color: #F9F7F7;
+    margin-right: 10px;
+}
+
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 100px 20px 40px;
+    background-color: #3F72AF;
+    color: white;
+    border-bottom: 5px solid #112D4E;
+    border-radius: 0 0 15px 15px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.header p {
+    margin: 10px 0 0;
+    font-size: 18px;
+    color: #DBE2EF;
+}
+
+/* Container */
+.container {
+    display: flex;
+    flex: 65%;
+    padding: 25px;
+    background-color: #F9F7F7;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.box {
+    flex: 1;
+    background-color: #F9F7F7;
+}
+
+main {
+    display: flex;
+    height: calc(100vh - 80px);
+    flex-direction: row-reverse;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: right;
+}
+
+textarea {
+    width: 100%;
+    height: 300px;
+    padding: 15px;
+    color: #112D4E;
+    font-size: 16px;
+    background-color: #ffffff;
+    border: 2px solid #DBE2EF;
+    border-radius: 10px;
+    resize: vertical;
+    text-align: right;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+textarea:focus {
+    border-color: #3F72AF;
+    box-shadow: 0 0 10px #3F72AF;
+}
+
+button {
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #3F72AF, #112D4E);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #112D4E, #3F72AF);
+    transform: scale(1.05);
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 35%;
+    background-color: #DBE2EF;
+    overflow-y: auto;
+    color: #112D4E;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.sidebar h3 {
+    margin: 10px 0 0;
+    color: #112D4E;
+    border-bottom: 2px solid #3F72AF;
+    padding-bottom: 10px;
+}
+
+/* Card for misspelled words */
+.wrong-word-card {
+    background-color: #DBE2EF; /* Card background color */
+    border: 1px solid #3F72AF; /* Border color */
+    border-radius: 10px; /* Rounded corners for the card */
+    padding: 15px;
+    margin: 15px 0;
+    text-align: center; /* Center align text */
+    color: #112D4E; /* Text color for the card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the card */
+}
+
+.wrong-word-card h4 {
+    margin: 0;
+    font-size: 20px; /* Font size for card title */
+    color: #3F72AF; /* Title color */
+}
+
+.button-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center; /* Center align buttons */
+    gap: 10px; /* Add space between buttons */
+}
+
+.card-button {
+    padding: 10px 20px;
+    background-color: #3F72AF; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners for buttons */
+    cursor: pointer; /* Pointer cursor for buttons */
+    font-size: 14px; /* Font size for button text */
+    transition: all 0.3s ease; /* Smooth transition effect */
+}
+
+.card-button:hover {
+    background-color: #112D4E; /* Change background color on hover */
+    transform: scale(1.1); /* Slightly enlarge button on hover */
+}
