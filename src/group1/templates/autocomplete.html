@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه تکمیل خودکار</title>
+    <link rel="stylesheet" href="{% static 'base/autocomplete_style.css' %}">
+    <style>
+        /* You can add or modify the styles here as per your preferences */
+        .autocomplete-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #autocomplete-input {
+            width: 70%;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #suggestions-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        #suggestions-list li {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            padding: 8px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        #suggestions-list li:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="autocomplete-container">
+        <h1>صفحه تکمیل خودکار</h1>
+
+        <!-- Autocompletion input field -->
+        <input type="text" id="autocomplete-input" placeholder="شروع به تایپ کنید...">
+        
+        <!-- List to display suggestions -->
+        <ul id="suggestions-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById("autocomplete-input").addEventListener("input", function() {
+            const query = this.value;
+            // Fetch suggestions from the backend based on user input
+            fetch(`/autocomplete/suggestions/?query=${query}`)  // AJAX request to the suggestions endpoint
+                .then(response => response.json())
+                .then(data => {
+                    const suggestionsList = document.getElementById("suggestions-list");
+                    suggestionsList.innerHTML = '';  // Clear previous suggestions
+
+                    // Display the suggestions in the list
+                    data.suggestions.forEach(function(suggestion) {
+                        const li = document.createElement('li');
+                        li.textContent = suggestion;
+
+                        // Populate the input field with the clicked suggestion
+                        li.onclick = function() {
+                            document.getElementById("autocomplete-input").value = suggestion;
+                            suggestionsList.innerHTML = '';  // Clear the suggestions list after selection
+                        };
+
+                        suggestionsList.appendChild(li);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
