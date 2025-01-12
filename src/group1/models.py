@@ -9,6 +9,10 @@ class PersianWord(models.Model):
     word = models.CharField(max_length=100, unique=True)
     frequency = models.IntegerField(default=0)  # Frequency of usage for ranking suggestions.
 
+    class Meta:
+        managed = False  # Tell Django not to manage this table
+        db_table = 'group1_persianword'  # Name of the table in the cloud DB
+
     def __str__(self):
         return self.word
 

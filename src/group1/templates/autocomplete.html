@@ -1,32 +1,47 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحه تکمیل خودکار</title>
     <link rel="stylesheet" href="{% static 'base/autocomplete_style.css' %}">
     <style>
-        /* You can add or modify the styles here as per your preferences */
         .autocomplete-container {
             text-align: center;
             margin-top: 20px;
         }
 
         #autocomplete-input {
-            width: 70%;
+            width: 60%;
             padding: 10px;
             font-size: 18px;
             border: 2px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
+            text-align: right; /* Aligns placeholder and text to the right */
+            direction: rtl;   /* Ensures text direction is right-to-left */
+        }
+
+        #done-button {
+            padding: 10px 15px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #done-button:hover {
+            background-color: #218838;
         }
 
         #suggestions-list {
             list-style-type: none;
             padding: 0;
             margin: 0;
-            width: 70%;
+            width: 60%;
             margin: 0 auto;
         }
 
@@ -36,10 +51,61 @@
             padding: 8px;
             margin: 5px 0;
             cursor: pointer;
+            text-align: right; /* Aligns suggestions to the right */
         }
 
         #suggestions-list li:hover {
             background-color: #e0e0e0;
+        }
+
+        #output-container {
+            width: 60%;
+            margin: 20px auto;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #output-box {
+            flex: 1;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: right; /* Aligns output text to the right */
+        }
+
+        #clear-button,
+        #save-button {
+            padding: 10px;
+            font-size: 18px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #clear-button {
+            background-color: #dc3545;
+        }
+
+        #clear-button:hover {
+            background-color: #c82333;
+        }
+
+        #save-button {
+            background-color: #007bff;
+        }
+
+        #save-button:hover {
+            background-color: #0056b3;
+        }
+
+        .icon {
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -48,36 +114,106 @@
         <h1>صفحه تکمیل خودکار</h1>
 
         <!-- Autocompletion input field -->
-        <input type="text" id="autocomplete-input" placeholder="شروع به تایپ کنید...">
-        
+        <div>
+            <input type="text" id="autocomplete-input" placeholder="شروع به تایپ کنید...">
+            <button id="done-button">ثبت</button>
+        </div>
+
         <!-- List to display suggestions -->
         <ul id="suggestions-list"></ul>
+
+        <!-- Output box with clear and save buttons -->
+        <div id="output-container">
+            <div id="output-box"></div>
+            <button id="clear-button">
+                <span class="icon">🗑️</span>
+                پاک کردن
+            </button>
+            <button id="save-button">
+                <span class="icon">📄</span>
+                ذخیره فایل
+            </button>
+        </div>
     </div>
 
     <script>
-        document.getElementById("autocomplete-input").addEventListener("input", function() {
-            const query = this.value;
-            // Fetch suggestions from the backend based on user input
-            fetch(`/autocomplete/suggestions/?query=${query}`)  // AJAX request to the suggestions endpoint
-                .then(response => response.json())
-                .then(data => {
-                    const suggestionsList = document.getElementById("suggestions-list");
-                    suggestionsList.innerHTML = '';  // Clear previous suggestions
+        const inputField = document.getElementById("autocomplete-input");
+        const suggestionsList = document.getElementById("suggestions-list");
+        const outputBox = document.getElementById("output-box");
+        const clearButton = document.getElementById("clear-button");
+        const saveButton = document.getElementById("save-button");
 
-                    // Display the suggestions in the list
-                    data.suggestions.forEach(function(suggestion) {
-                        const li = document.createElement('li');
-                        li.textContent = suggestion;
+        let disableSuggestions = false; // Flag to control suggestions visibility
 
-                        // Populate the input field with the clicked suggestion
-                        li.onclick = function() {
-                            document.getElementById("autocomplete-input").value = suggestion;
-                            suggestionsList.innerHTML = '';  // Clear the suggestions list after selection
-                        };
+        inputField.addEventListener("input", function () {
+            if (disableSuggestions) return; // Stop showing suggestions if disabled
 
-                        suggestionsList.appendChild(li);
+            const query = this.value.trim();
+            const url = "{% url 'group1:autocomplete_suggestions' %}?query=" + encodeURIComponent(query);
+
+            if (query.length > 0) {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionsList.innerHTML = ''; // Clear previous suggestions
+
+                        data.suggestions.forEach(function (suggestion) {
+                            const li = document.createElement('li');
+                            li.textContent = suggestion;
+
+                            // Handle clicking a suggestion
+                            li.onclick = function () {
+                                const currentInput = inputField.value.trim();
+                                const words = currentInput.split(' '); // Split the input into words
+
+                                // Replace the last word with the selected suggestion
+                                words[words.length - 1] = suggestion;
+                                inputField.value = words.join(' ') + ' '; // Rebuild the sentence
+
+                                suggestionsList.innerHTML = ''; // Clear suggestions
+                                inputField.focus(); // Refocus the input field for further typing
+                            };
+
+                            suggestionsList.appendChild(li);
+                        });
                     });
-                });
+            }
+        });
+
+        document.getElementById("done-button").addEventListener("click", function () {
+            const currentInput = inputField.value.trim();
+            if (currentInput) {
+                // Show the final string in the output box
+                outputBox.textContent = `${currentInput}`;
+            }
+
+            // Clear the suggestions and disable further suggestions until new input
+            suggestionsList.innerHTML = '';
+            disableSuggestions = true;
+        });
+
+        // Re-enable suggestions when user focuses and types again
+        inputField.addEventListener("focus", function () {
+            disableSuggestions = false;
+        });
+
+        // Clear the output box when the clear button is clicked
+        clearButton.addEventListener("click", function () {
+            outputBox.textContent = ''; // Clear the output box
+        });
+
+        // Save the output field as a .txt file
+        saveButton.addEventListener("click", function () {
+            const content = outputBox.textContent.trim();
+            if (content) {
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'output.txt'; // Filename for the download
+                link.click();
+            } else {
+                alert('هیچ متنی برای ذخیره وجود ندارد!');
+            }
         });
     </script>
 </body>
