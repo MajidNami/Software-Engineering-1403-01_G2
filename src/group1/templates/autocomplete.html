@@ -13,78 +13,112 @@
             src: url('{% static "fonts/Vazir.woff2" %}') format('woff2');
         }
 
-        
         * {
             font-family: 'Vazir', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Vazir', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.6;
             direction: rtl;
-            background-color: #f9f9f9;
         }
 
         .autocomplete-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #476687;
+            margin-bottom: 20px;
         }
 
         #autocomplete-input {
-            width: 70%;
-            padding: 10px;
-            font-size: 18px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            text-align: right;
-            direction: rtl;
+            width: 80%;
+            padding: 12px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        #autocomplete-input:focus {
+            border-color: #476687;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(71, 102, 135, 0.2);
         }
 
         #suggestions-list {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
-            margin: 0;
-            width: 70%;
-            margin: 0 auto;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: white;
         }
 
         #suggestions-list li {
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            padding: 8px;
-            margin: 5px 0;
+            padding: 10px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
         #suggestions-list li:hover {
-            background-color: #e0e0e0;
+            background-color: #f9f9f9;
+            transform: scale(1.02);
         }
 
         #output-field {
-            width: 70%;
-            padding: 10px;
-            font-size: 18px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
+            width: 88%;
+            height: 200px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
             margin-top: 20px;
             background-color: #f9f9f9;
             color: #333;
+            resize: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
             text-align: right;
             direction: rtl;
+            overflow-y: auto;
+            vertical-align: top;
         }
 
+
         .action-buttons {
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .action-buttons button {
-            margin: 0 5px;
+            margin: 5px;
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 0.9rem;
+            font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
-            font-family: 'Vazir', sans-serif;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .action-buttons button:active {
+            transform: scale(0.98);
         }
 
         .green-button {
@@ -92,9 +126,17 @@
             color: white;
         }
 
+        .green-button:hover {
+            background-color: #218838;
+        }
+
         .red-button {
             background-color: #dc3545;
             color: white;
+        }
+
+        .red-button:hover {
+            background-color: #c82333;
         }
 
         .blue-button {
@@ -102,29 +144,42 @@
             color: white;
         }
 
-        .action-buttons button:hover {
-            opacity: 0.9;
+        .blue-button:hover {
+            background-color: #0056b3;
+        }
+
+        #toggle-suggestions-btn {
+            background-color: #476687;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            margin-bottom: 15px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        #toggle-suggestions-btn:hover {
+            background-color: #38536c;
+        }
+
+        #toggle-suggestions-btn:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
 <body>
     <div class="autocomplete-container">
         <h1>صفحه تکمیل خودکار</h1>
-
-        <!-- Autocompletion input field -->
+        <button id="toggle-suggestions-btn">On</button>
         <input type="text" id="autocomplete-input" placeholder="شروع به تایپ کنید...">
-        
-        <!-- List to display suggestions -->
         <ul id="suggestions-list"></ul>
-
-        <!-- Final output field -->
         <textarea id="output-field" placeholder="متن نهایی اینجا نمایش داده می‌شود..." readonly></textarea>
-
-        <!-- Action buttons -->
         <div class="action-buttons">
             <button id="submit-btn" class="green-button">ثبت</button>
-            <button id="clear-btn" class="red-button">🗑</button>
-            <button id="save-btn" class="blue-button">📄</button>
+            <button id="clear-btn" class="red-button">🗑 پاک کردن</button>
+            <button id="save-btn" class="blue-button">📄 ذخیره</button>
         </div>
     </div>
 
@@ -135,8 +190,11 @@
         const submitBtn = document.getElementById("submit-btn");
         const clearBtn = document.getElementById("clear-btn");
         const saveBtn = document.getElementById("save-btn");
+        const toggleSuggestionsBtn = document.getElementById("toggle-suggestions-btn");
 
-        //get CSRF token
+        let suggestionsEnabled = true; // Track if suggestions are enabled or disabled
+
+        // Get CSRF token
         function getCookie(name) {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
@@ -150,81 +208,69 @@
 
         const csrfToken = getCookie('csrftoken');
 
-        //display suggestions based on input
+        // Display suggestions based on input
         inputField.addEventListener("input", function () {
             const query = this.value.trim();
 
-            if (query.length > 0) {
+            if (suggestionsEnabled && query.length > 0) {
                 fetch(`/group1/autocomplete/suggestions/?query=${encodeURIComponent(query)}`)
                     .then(response => response.json())
                     .then(data => {
                         suggestionsList.innerHTML = '';
 
-                        //add suggestions
+                        // Add suggestions
                         data.suggestions.forEach(suggestion => {
                             const li = document.createElement('li');
                             li.textContent = suggestion;
 
-                            //replace last word with selected suggestion
                             li.onclick = function () {
                                 const currentValue = inputField.value.trim();
-                                const words = currentValue.split(' '); // Split input into words
-
-                                //replace the last word with the suggestion
+                                const words = currentValue.split(' ');
                                 words[words.length - 1] = suggestion;
-
-                                //add the words back together and update input
                                 inputField.value = words.join(' ') + ' ';
-
-                                suggestionsList.innerHTML = ''; // Clear suggestions
+                                suggestionsList.innerHTML = '';
                                 inputField.focus();
 
-                                //send frequency update
                                 fetch(`/group1/update-frequency/`, {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
-                                        'X-CSRFToken': csrfToken, //CSRF token
+                                        'X-CSRFToken': csrfToken,
                                     },
                                     body: JSON.stringify({ word: suggestion }),
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (!data.success) {
-                                        console.error("Frequency update failed:", data.error);
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error("Error updating frequency:", error);
-                                });
+                                }).catch(console.error);
                             };
 
                             suggestionsList.appendChild(li);
                         });
                     });
             } else {
-                suggestionsList.innerHTML = ''; //clear suggestions if input is empty
+                suggestionsList.innerHTML = '';
             }
         });
 
-        // When the ok button is clicked
+        // Toggle suggestions button functionality
+        toggleSuggestionsBtn.addEventListener("click", function () {
+            suggestionsEnabled = !suggestionsEnabled; // Toggle suggestions
+            suggestionsList.innerHTML = ''; // Clear suggestions if disabled
+            toggleSuggestionsBtn.textContent = suggestionsEnabled ? "On" : "Off";
+        });
+
         submitBtn.addEventListener("click", function () {
             const inputValue = inputField.value.trim();
             if (inputValue) {
-                outputField.value = inputValue; //assign the input value to the output field
-                inputField.value = ''; 
-                suggestionsList.innerHTML = ''; 
+                outputField.value = inputValue;
+                inputField.value = '';
+                suggestionsList.innerHTML = '';
             } else {
                 alert("لطفا ابتدا متن را وارد کنید");
             }
         });
 
-        // When the trash button is clicked, clear the output field
         clearBtn.addEventListener("click", function () {
             outputField.value = '';
         });
 
-        // When the save button is clicked, download the output as a .txt file
         saveBtn.addEventListener("click", function () {
             const text = outputField.value.trim();
             if (text) {
@@ -234,9 +280,10 @@
                 link.download = "output.txt";
                 link.click();
             } else {
-                alert("متنی برای ذخیره وجود ندارد"); // Alert if the output field is empty
+                alert("متنی برای ذخیره وجود ندارد");
             }
         });
+
 
         /* Keyboard navigation for suggestions */
 
