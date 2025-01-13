@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from group5.ngram_utils import NGramModel
+from src.group5.ngram_utils import NGramModel
 
 ngram_model = NGramModel()
 
