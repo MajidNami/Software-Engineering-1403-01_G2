@@ -3,8 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-
-
 def home(request):
     return render(request, 'index.html', {'group_number': '5'})
 
