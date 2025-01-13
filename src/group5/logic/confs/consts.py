@@ -27,6 +27,7 @@ ALPHABET = ['ا', 'آ', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ',
 SPELL = "spell"
 MERGE = "merge"
 SPLIT = "split"
+NOTHING = "nothing"
 DELETION = "deletion"
 INSERTION = "insertion"
 SUBSTITUTION = "substitution"
