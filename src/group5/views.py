@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from group5.ngram_utils import NGramModel
 
+
 ngram_model = NGramModel()
 
 
