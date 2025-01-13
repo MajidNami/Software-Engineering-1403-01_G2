@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یافتن هم‌معنی کلمات</title>
+    <link rel="stylesheet" href="{% static 'group7/css/stylemain.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>یافتن هم‌معنی کلمات در جمله</h1>
+    <div class="input-section">
+        <textarea id="textInput" placeholder="جمله خود را اینجا وارد کنید..." rows="4"></textarea>
+        <div class="word-info">
+            <h3>هم‌معنی‌های کلمه انتخاب شده:</h3>
+            <div class="synonyms" id="synonymsContainer">
+                <span>برای دیدن هم‌معنی‌ها کلمه‌ای را انتخاب کنید</span>
+            </div>
+        </div>
+    </div>
+    <div class="instructions">
+        <p>برای یافتن هم‌معنی کلمات، متن خود را در کادر بالا وارد کنید و کلمه موردنظر را انتخاب کنید.</p>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        function getWordUnderCursor(element) {
+            const caretOffset = element.selectionStart;
+            const text = element.value;
+            const beforeCaret = text.substring(0, caretOffset);
+            const afterCaret = text.substring(caretOffset);
+
+            const start = beforeCaret.lastIndexOf(' ') + 1;
+            const end = afterCaret.indexOf(' ') === -1 ? text.length : caretOffset + afterCaret.indexOf(' ');
+
+            const word = text.substring(start, end).trim();
+            return word.length > 0 ? word : null;
+        }
+
+        function updateSelectedWord() {
+            const textInput = $('#textInput').get(0);
+            const selectedWord = getWordUnderCursor(textInput);
+
+            if (!selectedWord) {
+                $('#synonymsContainer').html('<span>متنی انتخاب نشده</span>');
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: '{% url "group7:exact_search_words" %}',
+                data: {
+                    q: selectedWord, // ارسال کلمه به سرور
+                },
+                success: function (response) {
+                    if (response) {
+                        const synonyms = response[0].synonyms;
+                        const synonymsList = synonyms.map(syn => `<span class="synonym">${syn}</span>`).join("");
+                        $('#synonymsContainer').html(synonymsList);
+                    } else {
+                        $('#synonymsContainer').html('<span class="error">هیچ مترادفی برای این کلمه یافت نشد.</span>');
+                    }
+                },
+                error: function (xhr, errmsg, err) {
+                    $('#synonymsContainer').html('<span class="error">خطا رخ داد: ' + errmsg + '</span>');
+                }
+            });
+        }
+
+        $('#textInput').on('mouseup keyup input', updateSelectedWord);
+    });
+</script>
+</body>
+</html>

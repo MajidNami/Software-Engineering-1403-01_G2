@@ -1,0 +1,239 @@
+@font-face {
+    font-family: 'Vazir';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff2') format('woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Vazir', sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, #6b46c1 0%, #4299e1 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+    padding: 2rem;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.97);
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    padding: 3rem;
+    width: 90%;
+    max-width: 800px;
+    backdrop-filter: blur(15px);
+    transform: translateY(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.container:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    color: #2d3748;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.2rem;
+    position: relative;
+    padding-bottom: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 5px;
+    background: linear-gradient(90deg, #6b46c1, #4299e1);
+    border-radius: 3px;
+}
+
+.input-section {
+    margin-bottom: 3rem;
+}
+
+textarea {
+    width: 100%;
+    padding: 1.4rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    resize: vertical;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    direction: rtl;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #f8fafc;
+    min-height: 140px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #6b46c1;
+    box-shadow: 0 0 0 4px rgba(107, 70, 193, 0.2);
+    background-color: #fff;
+}
+
+.word-info {
+    background: linear-gradient(135deg, #f8fafc, #edf2f7);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.word-info h3 {
+    color: #2d3748;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+.word-info h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6b46c1, transparent);
+    border-radius: 2px;
+}
+
+.synonyms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.synonym {
+    background: linear-gradient(135deg, #6b46c1 0%, #4299e1 100%);
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.synonym::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0.1), transparent);
+    pointer-events: none;
+}
+
+.synonym:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.instructions {
+    text-align: center;
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background-color: #f7fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.instructions p {
+    line-height: 1.8;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    .container {
+        padding: 2rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    textarea {
+        padding: 1.2rem;
+        font-size: 1.1rem;
+    }
+
+    .synonym {
+        padding: 0.7rem 1.4rem;
+        font-size: 1rem;
+    }
+}
+
+/* Enhanced animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.container {
+    animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.synonym {
+    animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add a subtle pulse animation to the heading underline */
+@keyframes pulseUnderline {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+
+h1::after {
+    animation: pulseUnderline 3s ease-in-out infinite;
+}
