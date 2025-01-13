@@ -1,8 +1,69 @@
-const API_URL = "http://localhost:3000/spellcheck";
+const TEXT_UPLOAD_URL = "http://localhost:3000/spellcheck/text";
+const FILE_UPLOAD_URL = "http://localhost:3000/spellcheck/file";
 
 const form = document.getElementById("textForm");
 const inputText = document.getElementById("inputText");
 const sidebar = document.getElementById("sidebar");
+const addFileButton = document.getElementById("addFileButton");
+const fileInput = document.createElement("input");
+
+fileInput.type = "file";
+fileInput.style.display = "none";
+document.body.appendChild(fileInput);
+
+// button icon
+const addFileButtonIcon = document.createElement("i");
+addFileButtonIcon.className = "fa-solid fa-file";
+addFileButton.appendChild(addFileButtonIcon);
+
+
+// Click event for the Add File button
+addFileButton.addEventListener("click", () => {
+    fileInput.click(); // open file selector
+});
+
+// رویداد تغییر (وقتی فایل انتخاب شد)
+fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0]; // فایل انتخاب‌شده
+    if (!file) return;
+
+    // غیرفعال کردن ورودی متن
+    inputText.disabled = true;
+
+    // تغییر آیکون به spinner
+    addFileButtonIcon.className = "fas fa-spinner fa-pulse"; // اضافه کردن کلاس spinner
+
+    try {
+        // ایجاد فرم داده برای ارسال فایل
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // ارسال درخواست به سرور
+        const response = await fetch(FILE_UPLOAD_URL, {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error("خطا در ارسال فایل");
+        }
+
+        const result = await response.json();
+        console.log("نتیجه سرور:", result);
+
+        // نمایش پیامی بر اساس نتیجه
+        alert("فایل با موفقیت ارسال شد!");
+
+        // پس از ارسال فایل، ورودی متن همچنان غیرفعال باقی می‌ماند
+        alert("ورودی متن برای همیشه غیرفعال شد. نمی‌توانید تایپ کنید.");
+    } catch (error) {
+        console.error("خطا:", error);
+        alert("ارسال فایل با خطا مواجه شد.");
+    } finally {
+        // بازگرداندن آیکون به حالت اصلی
+        addFileButtonIcon.className = "fa-solid fa-file"; // آیکون اصلی
+    }
+});
 
 // Set focus on the input field by default
 inputText.focus();
@@ -74,7 +135,7 @@ form.addEventListener("submit", async (e) => {
     }
 
     try {
-        const response = await fetch(API_URL, {
+        const response = await fetch(TEXT_UPLOAD_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
