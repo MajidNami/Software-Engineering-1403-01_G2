@@ -23,6 +23,15 @@ ALPHABET = ['ا', 'آ', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ',
             'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن',
             'و', 'ه', 'ی', '‌']
 
+# BASIC OPS
+SPELL = "spell"
+MERGE = "merge"
+SPLIT = "split"
+DELETION = "deletion"
+INSERTION = "insertion"
+SUBSTITUTION = "substitution"
+TRANSPOSITION = "transposition"
+
 
 def get_bigram_lm():
     return DATA_HELPER.load_var(DIR_PATH + BIGRAM_LM_PATH)

@@ -6,6 +6,13 @@ from confs.consts import get_alphabet
 from confs.consts import get_homonym_chars
 from confs.consts import get_persian_dictionary
 from confs.consts import PERSIAN_DICT_PATH
+from confs.consts import SPELL
+from confs.consts import MERGE
+from confs.consts import SPLIT
+from confs.consts import DELETION
+from confs.consts import INSERTION
+from confs.consts import SUBSTITUTION
+from confs.consts import TRANSPOSITION
 import math
 
 NORMALIZER = Normalizer()
