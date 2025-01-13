@@ -22,18 +22,18 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path("" , views.base),
-    path("admin/", admin.site.urls),
-    path("registration/", include("registration.urls")),
-    path("group1/", include("group1.urls")),
-    path("group2/", include("group2.urls")),
-    path("group3/", include("group3.urls")),
-    path("group4/", include("group4.urls")),
-    path("group5/", include("group5.urls")),
-    path("group6/", include("group6.urls")),
-    path("group7/", include("group7.urls")),
-    path("group8/", include("group8.urls")),
-    path("group9/", include("group9.urls")),
-    path("group10/", include("group10.urls")),
+                  path("", views.base),
+                  path("admin/", admin.site.urls),
+                  path("registration/", include("registration.urls")),
+                  path("group1/", include("group1.urls")),
+                  path("group2/", include("group2.urls")),
+                  path("group3/", include("group3.urls")),
+                  path("group4/", include("group4.urls")),
+                  path("group5/", include("group5.urls")),
+                  path("group6/", include("group6.urls")),
+                  path("group7/", include("group7.urls")),
+                  path("group8/", include("group8.urls")),
+                  path("group9/", include("group9.urls")),
+                  path("group10/", include("group10.urls")),
 
-]
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
