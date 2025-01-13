@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from django.conf import settings
 
-from group5.models import NGram
+from src.group5.models import NGram
 
 
 class NGramModel:
