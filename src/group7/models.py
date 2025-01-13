@@ -57,3 +57,22 @@ class UserProfile(models.Model):
         indexes = [
             models.Index(fields=['user']),
         ]
+
+
+##----------------------------------------------------------------------------------   FavoriteWord
+
+
+class FavoriteWord(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_words', verbose_name='User')
+    word = models.ForeignKey(Word, on_delete=models.CASCADE, related_name='favorited_by', verbose_name='Word')
+    added_at = models.DateTimeField(auto_now_add=True, verbose_name='Added At')
+
+    def __str__(self):
+        return f"{self.word.word}"
+
+    class Meta:
+        verbose_name = "Favorite Word"
+        verbose_name_plural = "Favorite Words"
+        unique_together = ('user', 'word')
+        ordering = ['-added_at']
