@@ -6,9 +6,9 @@ from .views import *
 
 app_name = 'group7'
 urlpatterns = [
-    path('', views.home, name='home'),
+    # path('', views.home, name='home'),
     path('', views.home, name='group7'),
-    path('about', views.about, name='index'),
+    path('about', views.about, name='about'),
     # path('search/', exact_search_words, name='exact_search_words'),
     # path('index/', views.index, name='index'),
     # path('about/', views.about, name='about'),
