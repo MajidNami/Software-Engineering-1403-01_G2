@@ -1,7 +1,6 @@
 import sys
 import os
 
-# Adjust path to the project root
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 import mysql
@@ -23,7 +22,7 @@ def create_custom_table(mydb, create_table_query):
 
 
 
-# Function to add a new PersianWord
+#add a new PersianWord
 def add_persian_word(mydb, word, frequency=0):
     cursor = mydb.cursor()
     query = "INSERT INTO group1_persianword (word, frequency) VALUES (%s, %s)"
@@ -37,7 +36,7 @@ def add_persian_word(mydb, word, frequency=0):
         cursor.close()
 
 
-# Function to get all Persian words
+#get all Persian words
 def get_all_persian_words(mydb):
     cursor = mydb.cursor(dictionary=True)
     query = "SELECT * FROM group1_persianword"
@@ -47,7 +46,7 @@ def get_all_persian_words(mydb):
     return words
 
 
-# Function to get UserHistory by user_id and word_id
+#get UserHistory by user_id and word_id
 def get_user_history(mydb, user_id, word_id):
     cursor = mydb.cursor(dictionary=True)
     query = "SELECT * FROM group1_userhistory WHERE user_id = %s AND word_id = %s"
@@ -57,7 +56,7 @@ def get_user_history(mydb, user_id, word_id):
     return history
 
 
-# Function to add a new UserHistory record
+#add a new UserHistory record
 def add_user_history(mydb, user_id, word_id):
     cursor = mydb.cursor()
     query = "INSERT INTO group1_userhistory (user_id, word_id) VALUES (%s, %s)"
@@ -69,11 +68,6 @@ def add_user_history(mydb, user_id, word_id):
         print(f"Failed to add user history: {err}")
     finally:
         cursor.close()
-
-
-# Function to fetch a Persian word by its ID
-def get_persian_word_by_id(mydb, word_id):
-    return fetch_row_by_PRIMARY_KEY(mydb, "group1_persianword", word_id)
 
 
 # Function to fetch a UserHistory record by its ID
@@ -92,18 +86,3 @@ if __name__ == "__main__":
         frequency INT DEFAULT 0
     );"""
     create_custom_table(db_connection,query)
-
-    # # Example: Adding a new Persian word
-    # add_persian_word(db_connection, "کتاب", 10)
-
-    # # Example: Fetching all Persian words
-    # words = get_all_persian_words(db_connection)
-    # print(words)
-
-    # # Example: Fetching user history for a given user and word
-    # user_history = get_user_history(db_connection, 1, 1)  # Replace with actual user_id and word_id
-    # print(user_history)
-
-    # # Example: Adding a new user history record
-    # add_user_history(db_connection, 1, 1)  # Replace with actual user_id and word_id
-

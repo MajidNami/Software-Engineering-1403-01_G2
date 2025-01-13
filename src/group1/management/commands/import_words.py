@@ -43,29 +43,28 @@
 
 
 # group1/management/commands/import_words.py
-import os
-from django.core.management.base import BaseCommand
-from group1.models import PersianWord
+# import os
+# from django.core.management.base import BaseCommand
+# from group1.models import PersianWord
 
-class Command(BaseCommand):
-    help = 'Import words from a .txt file to the PersianWord model'
+# class Command(BaseCommand):
+#     help = 'Import words from a .txt file to the PersianWord model'
 
-    def handle(self, *args, **kwargs):
-        file_path = 'C:/Users/Arian/OneDrive/Desktop/distinct_words.txt'  # Replace with the path to your .txt file
-        if not os.path.exists(file_path):
-            self.stdout.write(self.style.ERROR(f"File {file_path} does not exist"))
-            return
+#     def handle(self, *args, **kwargs):
+#         file_path = 'C:/Users/Arian/OneDrive/Desktop/distinct_words.txt'
+#         if not os.path.exists(file_path):
+#             self.stdout.write(self.style.ERROR(f"File {file_path} does not exist"))
+#             return
 
-        with open(file_path, 'r', encoding='utf-8') as file:
-            words = file.readlines()
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             words = file.readlines()
 
-        # Clean up the words and insert them into the database
-        for word in words:
-            word = word.strip()  # Remove any leading/trailing whitespace or newlines
-            if word:  # Ensure it's not an empty line
-                # Check if the word already exists in the database
-                if not PersianWord.objects.filter(word=word).exists():
-                    # Create and save the word to the database
-                    PersianWord.objects.create(word=word, frequency=0)
+#         for word in words:
+#             word = word.strip()
+#             if word:
+                
+#                 if not PersianWord.objects.filter(word=word).exists():
+                    
+#                     PersianWord.objects.create(word=word, frequency=0)
 
-        self.stdout.write(self.style.SUCCESS(f"Successfully imported words from {file_path}"))
+#         self.stdout.write(self.style.SUCCESS(f"Successfully imported words from {file_path}"))
