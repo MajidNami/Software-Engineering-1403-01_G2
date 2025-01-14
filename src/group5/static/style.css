@@ -1,4 +1,3 @@
-/* General Layout */
 body {
     background: linear-gradient(135deg, #F9F7F7, #DBE2EF);
     font-family: "Vazir", "tahoma", "ubuntu" !important;
@@ -12,9 +11,8 @@ body {
     color: #112D4E;
 }
 
-/* Navbar */
 .navbar {
-    background: linear-gradient(90deg, #3F72AF, #112D4E); /* گرادیان زیباتر */
+    background: linear-gradient(90deg, #3F72AF, #112D4E);
     color: white;
     padding: 15px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -41,8 +39,6 @@ body {
     margin-right: 10px;
 }
 
-
-/* Header */
 .header {
     text-align: center;
     padding: 100px 20px 40px;
@@ -63,7 +59,6 @@ body {
     color: #DBE2EF;
 }
 
-/* Container */
 .container {
     display: flex;
     flex: 65%;
@@ -86,6 +81,7 @@ main {
     justify-content: space-between;
     gap: 15px;
     padding: 20px;
+    overflow: hidden;
 }
 
 form {
@@ -132,13 +128,13 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Sidebar */
 .sidebar {
     display: flex;
     flex-direction: column;
     flex: 35%;
     background-color: #DBE2EF;
     overflow-y: auto;
+    max-height: calc(100vh - 100px);
     color: #112D4E;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -152,52 +148,51 @@ button:hover {
     padding-bottom: 10px;
 }
 
-/* Card for misspelled words */
 .wrong-word-card {
-    background-color: #DBE2EF; /* Card background color */
-    border: 1px solid #3F72AF; /* Border color */
-    border-radius: 10px; /* Rounded corners for the card */
-    padding: 15px;
-    margin: 15px 0;
-    text-align: center; /* Center align text */
-    color: #112D4E; /* Text color for the card */
+    background-color: #DBE2EF;
+    border: 1px solid #3F72AF;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    color: #112D4E;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add shadow to the card */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .wrong-word-card h4 {
     margin: 0;
-    font-size: 20px; /* Font size for card title */
-    color: #3F72AF; /* Title color */
+    font-size: 18px;
+    color: #3F72AF;
 }
 
 .button-container {
-    margin-top: 15px;
+    margin-top: 10px;
     display: flex;
-    justify-content: center; /* Center align buttons */
-    gap: 10px; /* Add space between buttons */
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
 }
 
 .card-button {
-    padding: 10px 20px;
-    background-color: #3F72AF; /* Button background color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners for buttons */
-    cursor: pointer; /* Pointer cursor for buttons */
-    font-size: 14px; /* Font size for button text */
-    transition: all 0.3s ease; /* Smooth transition effect */
+    padding: 10px 15px;
+    background-color: #3F72AF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
 }
 
 .card-button:hover {
-    background-color: #112D4E; /* Change background color on hover */
-    transform: scale(1.1); /* Slightly enlarge button on hover */
+    background-color: #112D4E;
+    transform: scale(1.1);
 }
 
-/* Add File Button */
 .addFileButton {
     padding: 15px 20px;
     font-size: 18px;
@@ -210,10 +205,6 @@ button:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     margin-top: 10px;
-}
-
-.addFileButton i {
-    margin-right: 10px;
 }
 
 .addFileButton:hover {

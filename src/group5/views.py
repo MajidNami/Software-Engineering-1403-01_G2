@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from src.group5.logic.draft import spell_corrector
+from src.group5.logic.miss_spell_finder import SpellCorrector
 
 
 def home(request):
@@ -13,7 +13,8 @@ def home(request):
 def handle_text_request(request):
     data = request.data
     text = data.get('text')
-    result = spell_corrector(text)
+    spell_corrector = SpellCorrector()
+    result = spell_corrector.miss_spell_suggestion(text)
     wrong_words = []
     for item in result:
         for wrong_word, suggestions in item.items():
@@ -33,7 +34,8 @@ def handle_file_upload(request):
 
     try:
         file_content = uploaded_file.read().decode('utf-8')
-        result = spell_corrector(file_content)
+        spell_corrector = SpellCorrector()
+        result = spell_corrector.miss_spell_suggestion(file_content)
         formatted_result = {
             "wrongWords": [
                 {"wrongWord": wrong_word, "suggestions": suggestions}

@@ -438,4 +438,7 @@ class SpellCorrector:
             miss_spells_suggestions.append({words[i]: best_candidates})
             prev_word = best_candidates[0]
 
+        stop_words = {"از", "به", "در", "با", "بر", "تا", "جز", "پس", "که", "نه", "چه", "کی", "\'", "\""}
+        miss_spells_suggestions = [suggestion for suggestion in miss_spells_suggestions if
+                                   list(suggestion.keys())[0] not in stop_words]
         return miss_spells_suggestions

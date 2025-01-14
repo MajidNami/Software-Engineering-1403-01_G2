@@ -11,34 +11,29 @@ fileInput.type = "file";
 fileInput.style.display = "none";
 document.body.appendChild(fileInput);
 
-// button icon
 const addFileButtonIcon = document.createElement("i");
 addFileButtonIcon.className = "fa-solid fa-file";
 addFileButton.appendChild(addFileButtonIcon);
 
 
-// Click event for the Add File button
 addFileButton.addEventListener("click", () => {
     fileInput.click(); // open file selector
 });
 
-// رویداد تغییر (وقتی فایل انتخاب شد)
 fileInput.addEventListener("change", async () => {
-    const file = fileInput.files[0]; // فایل انتخاب‌شده
+    const file = fileInput.files[0];
     if (!file) return;
 
-    // غیرفعال کردن ورودی متن
     inputText.disabled = true;
-
-    // تغییر آیکون به spinner
-    addFileButtonIcon.className = "fas fa-spinner fa-pulse"; // اضافه کردن کلاس spinner
+    addFileButtonIcon.className = "fas fa-spinner fa-pulse";
 
     try {
-        // ایجاد فرم داده برای ارسال فایل
+        const fileText = await file.text();
+        inputText.value = fileText;
+
         const formData = new FormData();
         formData.append("file", file);
 
-        // ارسال درخواست به سرور
         const response = await fetch(FILE_UPLOAD_URL, {
             method: "POST",
             body: formData,
@@ -49,60 +44,56 @@ fileInput.addEventListener("change", async () => {
         }
 
         const result = await response.json();
-        console.log("نتیجه سرور:", result);
 
-        // نمایش پیامی بر اساس نتیجه
-        alert("فایل با موفقیت ارسال شد!");
-
-        // پس از ارسال فایل، ورودی متن همچنان غیرفعال باقی می‌ماند
-        alert("ورودی متن برای همیشه غیرفعال شد. نمی‌توانید تایپ کنید.");
+        if (result.wrongWords && result.wrongWords.length > 0) {
+            displayWrongWords(result.wrongWords);
+        } else {
+            sidebar.innerHTML = "<p>هیچ کلمه اشتباهی یافت نشد.</p>";
+        }
     } catch (error) {
         console.error("خطا:", error);
         alert("ارسال فایل با خطا مواجه شد.");
     } finally {
-        // بازگرداندن آیکون به حالت اصلی
-        addFileButtonIcon.className = "fa-solid fa-file"; // آیکون اصلی
+        addFileButtonIcon.className = "fa-solid fa-file";
+        inputText.disabled = false;
+        fileInput.value = "";
     }
 });
 
-// Set focus on the input field by default
 inputText.focus();
 
-// Event to submit the form using the Enter key
 inputText.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && e.shiftKey) {
-        return; // Create a new line (default browser behavior)
+        return;
     }
-    if (e.key === "Enter") { // If the Enter key is pressed
-        e.preventDefault(); // Prevent creating a new line
-        form.dispatchEvent(new Event("submit")); // Programmatically submit the form
+    if (e.key === "Enter") {
+        e.preventDefault();
+        form.dispatchEvent(new Event("submit"));
     }
 });
 
 function displayWrongWords(wrongWords) {
     sidebar.innerHTML = "<h3>غلط های پیدا شده</h3>";
 
-    wrongWords.forEach((wordObj, index) => {
-        // Create a card for the word
+     wrongWords.forEach((wordObj, index) => {
         const card = document.createElement("div");
         card.className = "wrong-word-card";
-        card.id = `wrong-word-card-${index}`; // Assign a unique ID to each card
+        card.id = `wrong-word-card-${index}`;
 
-        // Display the incorrect word
         const wordElement = document.createElement("h4");
-        wordElement.textContent = wordObj[0]; // Incorrect word
+        wordElement.textContent = wordObj.wrongWord || wordObj[0];
         card.appendChild(wordElement);
 
-        // Create buttons for suggestions
         const buttonContainer = document.createElement("div");
         buttonContainer.className = "button-container";
 
-        wordObj[1].forEach((suggestion) => {
+        const suggestions = wordObj.suggestions || wordObj[1];
+        suggestions.forEach((suggestion) => {
             const button = document.createElement("button");
-            button.textContent = suggestion; // Suggestion text
+            button.textContent = suggestion;
             button.className = "card-button";
             button.addEventListener("click", () => {
-                replaceWordInInput(wordObj[0], suggestion, `wrong-word-card-${index}`);
+                replaceWordInInput(wordObj.wrongWord || wordObj[0], suggestion, `wrong-word-card-${index}`);
             });
             buttonContainer.appendChild(button);
         });
@@ -113,15 +104,20 @@ function displayWrongWords(wrongWords) {
 }
 
 function replaceWordInInput(oldWord, newWord, cardId) {
-    // Replace the word in the text
-    const text = inputText.value;
-    const updatedText = text.split(' ').map(word => word === oldWord ? newWord : word).join(' ');
+    let text = inputText.value;
+    const regex = new RegExp(oldWord, 'g');
+    const updatedText = text.replace(regex, newWord);
     inputText.value = updatedText;
-
-    // Remove the card from the sidebar
-    const card = document.getElementById(cardId);
-    if (card) {
-        card.remove();
+    const allCards = document.querySelectorAll('.wrong-word-card');
+    allCards.forEach((card) => {
+        const wordElement = card.querySelector('h4');
+        if (wordElement && wordElement.textContent === oldWord) {
+            card.remove();
+        }
+    });
+    const specificCard = document.getElementById(cardId);
+    if (specificCard) {
+        specificCard.remove();
     }
 }
 

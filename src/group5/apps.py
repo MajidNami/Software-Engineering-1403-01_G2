@@ -10,7 +10,8 @@ def create_excel_from_database():
     engine = create_engine(db_url, connect_args={"ssl_ca": "/path/to/ca-certificate.crt"})
     query = "SELECT word FROM G2_5_dataset"
     df = pd.read_sql(query, con=engine)
-    file_path = r"C:\Users\Amir hosein\Desktop\spell-correction\src\group5\updated_persian_dic3.xlsx"
+    file_path = (r"C:\Users\Amir hosein\Desktop\spell-correction\src\group5\logic\confs\resource\updated_persian_dic3"
+                 r".xlsx")
     df.to_excel(file_path, index=False, header=False, sheet_name='Words', engine='openpyxl')
 
     print(f"Saved Successfully.")
