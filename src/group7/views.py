@@ -257,3 +257,6 @@ def wordcard(request, favoriteword):
         return render(request, 'wordcard.html', {'word': result[0]})
     else:
         return JsonResponse({"error": "No results found for the given word."}, status=404)
+
+
+
