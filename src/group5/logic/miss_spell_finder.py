@@ -372,7 +372,7 @@ class SpellCorrector:
         return False
 
     def miss_spell_suggestion(self, string):
-        words = TOKENIZER.tokenize_words(NORMALIZER.normalize(string))
+        words = list(dict.fromkeys(TOKENIZER.tokenize_words(NORMALIZER.normalize(string))))
         prev_word = None
         potential_miss_spells = []
         miss_spells_suggestions = []

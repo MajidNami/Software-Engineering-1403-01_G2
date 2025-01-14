@@ -108,13 +108,6 @@ function replaceWordInInput(oldWord, newWord, cardId) {
     const regex = new RegExp(oldWord, 'g');
     const updatedText = text.replace(regex, newWord);
     inputText.value = updatedText;
-    const allCards = document.querySelectorAll('.wrong-word-card');
-    allCards.forEach((card) => {
-        const wordElement = card.querySelector('h4');
-        if (wordElement && wordElement.textContent === oldWord) {
-            card.remove();
-        }
-    });
     const specificCard = document.getElementById(cardId);
     if (specificCard) {
         specificCard.remove();
