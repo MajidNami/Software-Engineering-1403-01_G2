@@ -359,3 +359,87 @@ textarea:focus {
 h1::after {
     animation: pulseUnderline 3s ease-in-out infinite;
 }
+
+.highlight-word {
+    text-decoration: underline;
+    text-decoration-color: yellow;
+    text-decoration-style: solid;
+}
+.editable-textarea {
+    border: 1px solid #ccc;
+    padding: 10px;
+    min-height: 100px;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: pre-wrap; /* برای پشتیبانی از خطوط جدید */
+    overflow-wrap: break-word;
+}
+.editable-textarea:empty::before {
+    content: attr(placeholder); /* نمایش placeholder */
+    color: #aaa;
+}
+.synonym {
+    cursor: pointer;
+    background: linear-gradient(135deg, #6b46c1 0%, #4299e1 100%);
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border-radius: 30px;
+    transition: all 0.3s;
+    margin: 5px;
+}
+
+.synonym:hover {
+    background: linear-gradient(135deg, #4299e1 0%, #6b46c1 100%);
+    transform: translateY(-3px) scale(1.05);
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.synonym {
+    animation: fadeInScale 0.4s ease-in-out;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6b46c1 0%, #4299e1 100%);
+    color: white;
+    padding: 0.8rem 1.6rem;
+    border-radius: 30px;
+    transition: all 0.3s;
+    margin: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.synonym::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease-out;
+    border-radius: 30px;
+}
+
+.synonym:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.synonym:hover {
+    background: linear-gradient(135deg, #4299e1 0%, #6b46c1 100%);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+

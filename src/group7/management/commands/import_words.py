@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
         for entry in data:
             word_text = entry.get('word')
-            print(word_text)
+
             synonyms = entry.get('synonyms', [])
 
             word_obj, created = Word.objects.get_or_create(word=word_text)

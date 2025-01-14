@@ -62,10 +62,20 @@ def delete_word(sender, instance, **kwargs):
     except Exception as e:
         logger.error(f"Error deleting Word (ID: {instance.id}) from index: {e}")
 
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(
+            user=instance,
+            email=instance.email or "default@example.com",
+            first_name=instance.first_name or "بدون نام",
+            last_name=instance.last_name or "بدون نام",
+            profile_image="uploads/profiles/default-profile.png",  # تصویر پیش‌فرض
+            bio="...",
+            additional_info="..."
+        )
+
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):

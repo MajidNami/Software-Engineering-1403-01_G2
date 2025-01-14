@@ -15,12 +15,10 @@ urlpatterns = [
 
     path('search/', exact_search_words, name='exact_search_words'),
 
-    # path('about/', views.about, name='about'),
-    # path('login/', views.login_user, name='login'),
-    # path('logout/', views.logout_user, name='logout'),
-    # path('register/', views.register_user, name='register'),
+
     path('profile/', views.user_profile, name='user_profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('highlight-words/', highlight_words, name='highlight_words'),
     #
     # path('searchpage/', views.searchPage, name='searchPage'),
     #

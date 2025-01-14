@@ -1,8 +1,7 @@
 import mysql.connector as mysql
+
+
 # تعریف تابع برای ایجاد اتصال به دیتابیس
-from mysql.connector import Error
-
-
 def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
     try:
         mydb = mysql.connect(
@@ -13,28 +12,9 @@ def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
             database=DB_NAME
         )
         print("Connection to MySQL DB successful")
-        return mydb
-
-    except mysql.InterfaceError as e:
-        print(f"Interface error: {e}")
-    except mysql.ProgrammingError as e:
-        print(f"Programming error: {e}")
-    except mysql.DatabaseError as e:
-        print(f"Database error: {e}")
-    except mysql.IntegrityError as e:
-        print(f"Integrity error: {e}")
-    except mysql.DataError as e:
-        print(f"Data error: {e}")
-    except mysql.OperationalError as e:
-        print(f"Operational error: {e}")
-    except mysql.NotSupportedError as e:
-        print(f"Not supported error: {e}")
-    except Error as e:
-        print(f"General MySQL error: {e}")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-
-    return None
+    except mysql.connector.Error as e:
+        print(f"The error '{e}' occurred")
+    return mydb
 
 
 def create_table(mydb, create_table_query):
@@ -49,7 +29,6 @@ def create_table(mydb, create_table_query):
         cursor.close()
 
 
-
 def drop_table(mydb, table_name):
     cursor = mydb.cursor()
     try:
@@ -62,15 +41,14 @@ def drop_table(mydb, table_name):
         cursor.close()
 
 
-
 def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
     cursor = mydb.cursor()
     try:
         query = f"SELECT * FROM {table_name} WHERE id = %s"
         cursor.execute(query, (id,))
-        
+
         result = cursor.fetchone()
-        
+
         if result:
             return result
         else:
@@ -81,7 +59,6 @@ def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
         return None
     finally:
         cursor.close()
-
 
 
 import mysql.connector as mysql
@@ -101,24 +78,8 @@ def save_user(mydb, name, username, password, email, age):
         my_cursor.execute(add_user_query, (name, username, password, email, age))
         mydb.commit()  # تایید تغییرات
         print("User saved successfully.")
-    except mysql.IntegrityError as err:
-        print("Integrity error: Possible duplicate or constraint issue.")
-        print(err)
-    except mysql.DataError as err:
-        print("Data error: Invalid data provided.")
-        print(err)
-    except mysql.OperationalError as err:
-        print("Operational error: Database connection or server issue.")
-        print(err)
-    except mysql.ProgrammingError as err:
-        print("Programming error: SQL syntax issue.")
-        print(err)
     except mysql.Error as err:
-        print("A MySQL error occurred:")
-        print(err)
-    except Exception as err:
-        print("An unexpected error occurred:")
-        print(err)
+        print("Failed to insert user:", err)
     finally:
         my_cursor.close()
 
@@ -131,19 +92,18 @@ def save_post(mydb, description, email, state, category, image_address, image_na
     INSERT INTO posts (description, email, state, category, image_address, image_name, image_tags, user_id)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
-    
+
     try:
         # اجرای دستور و اضافه کردن پست
-        my_cursor.execute(add_post_query, (description, email, state, category, image_address, image_name, image_tags, user_id))
-        mydb.commit() # تایید تغییرات
+        my_cursor.execute(add_post_query,
+                          (description, email, state, category, image_address, image_name, image_tags, user_id))
+        mydb.commit()  # تایید تغییرات
         print("Post saved successfully.")
         return my_cursor.lastrowid
     except mysql.Error as err:
         print("Failed to insert post:", err)
     finally:
         my_cursor.close()
-
-
 
 
 def get_user_id_by_username(db_connection, username):
@@ -157,7 +117,6 @@ def get_user_id_by_username(db_connection, username):
         return result[0]  # بازگرداندن id کاربر
     else:
         return None  # اگر کاربری با این username وجود نداشته باشد
-    
 
 
 def get_posts_by_user_id(db_connection, user_id):
@@ -217,7 +176,6 @@ def search_posts_tag_for_user(db_connection, username, query):
 
     cursor.close()
     return posts_list
-
 
 
 def search_posts_tag_for_all(db_connection, query):

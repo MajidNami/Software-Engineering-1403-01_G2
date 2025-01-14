@@ -1,8 +1,12 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 import logging
+
+from django.views.decorators.csrf import csrf_exempt
 from hazm import *
 from meilisearch import Client
+
+from .models import Word
 from .utils import translate_to_farsi
 from group7.apps import logger
 
@@ -65,7 +69,7 @@ def exact_search_words(request):
 
         if not results.get('hits', []):
             return search_words(request)
-        print(results.get('hits', []))
+
         return JsonResponse(results.get('hits', []), safe=False)
 
     except Exception as e:
@@ -158,3 +162,21 @@ def detect_language(word):
 
     else:
         return False
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import re
+
+@method_decorator(csrf_exempt, name='dispatch')
+def highlight_words(request):
+    if request.method == "POST":
+        sentence = request.POST.get('sentence', '')
+        words_in_sentence = re.findall(r'\b\w+\b', sentence)  # استخراج کلمات
+
+        # بررسی کلمات در دیتابیس
+        found_words = Word.objects.filter(word__in=words_in_sentence).values_list('word', flat=True)
+        return JsonResponse({'words': list(found_words)})
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
