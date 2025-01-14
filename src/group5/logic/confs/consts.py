@@ -7,9 +7,9 @@ DATA_HELPER = DataHelper()
 
 # PATHS
 DIR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/"
-BIGRAM_LM_PATH = "resource/mybigram_lm.pckl"
-ONEGRAM_LM_PATH = "resource/onegram.pckl"
-PERSIAN_DICT_PATH = "confs/resource/updated_persian_dic2.xlsx"
+BIGRAM_LM_PATH = "src/group5/logic/confs/resource/mybigram_lm.pckl"
+ONEGRAM_LM_PATH = "src/group5/logic/confs/resource/onegram.pckl"
+PERSIAN_DICT_PATH = "src/group5/logic/confs/resource/updated_persian_dic3.xlsx"
 
 # OBJECTS
 HOMONYM_CHARS = [{'ا', 'آ', 'ع'},
@@ -56,9 +56,8 @@ def get_persian_dictionary(file_path: str):
         data = pd.read_excel(file_path)
         for _, row in data.iterrows():
             words = [word.strip() for word in str(row.iloc[0]).split('،')]  # Handle multiple spellings
-            meaning = str(row.iloc[1]).strip()  # Ensure meaning is a string
             for word in words:
-                persian_dict[word] = meaning
+                persian_dict[word] = ""
         return persian_dict
     except Exception as e:
         print("An error occurred:", e)

@@ -1,19 +1,19 @@
 from parsivar import Normalizer
 from parsivar import Tokenizer
-from confs.consts import get_bigram_lm
-from confs.consts import get_onegram_lm
-from confs.consts import get_alphabet
-from confs.consts import get_homonym_chars
-from confs.consts import get_persian_dictionary
-from confs.consts import PERSIAN_DICT_PATH
-from confs.consts import SPELL
-from confs.consts import MERGE
-from confs.consts import SPLIT
-from confs.consts import NOTHING
-from confs.consts import DELETION
-from confs.consts import INSERTION
-from confs.consts import SUBSTITUTION
-from confs.consts import TRANSPOSITION
+from src.group5.logic.confs.consts import get_bigram_lm
+from src.group5.logic.confs.consts import get_onegram_lm
+from src.group5.logic.confs.consts import get_alphabet
+from src.group5.logic.confs.consts import get_homonym_chars
+from src.group5.logic.confs.consts import get_persian_dictionary
+from src.group5.logic.confs.consts import PERSIAN_DICT_PATH
+from src.group5.logic.confs.consts import SPELL
+from src.group5.logic.confs.consts import MERGE
+from src.group5.logic.confs.consts import SPLIT
+from src.group5.logic.confs.consts import NOTHING
+from src.group5.logic.confs.consts import DELETION
+from src.group5.logic.confs.consts import INSERTION
+from src.group5.logic.confs.consts import SUBSTITUTION
+from src.group5.logic.confs.consts import TRANSPOSITION
 import math
 
 NORMALIZER = Normalizer()
@@ -127,7 +127,6 @@ class BasicOperations:
         return new_sim_words, ops
 
 
-
 class WordsEvaluation:
     def __init__(self, words, index):
         self.basic_ops = BasicOperations(words, index)
@@ -202,3 +201,241 @@ class WordsEvaluation:
                         break
                 break
         return is_homonym
+
+    def filter_possible_words(self, words, index):
+        wi = words[index]
+        possible_words = []
+        possible_ops = []
+        possible_words_prob_dict = {}
+        possible_ops_dict = {}
+
+        possible_words.append(wi)
+        possible_ops.append(NOTHING)
+
+        if len(wi) == 1:
+            return possible_words, possible_ops
+        built_words, ops = self.basic_ops.generate_words_with_basic_ops(words, index, wi, SPELL)
+        for i, word in enumerate(built_words):
+            if self.isword(word):
+                prob = self.onegram_probability(word)
+                if word not in possible_words_prob_dict:
+                    possible_words_prob_dict[word] = prob
+                    possible_ops_dict[word] = ops[i]
+
+        built_words, ops = self.basic_ops.generate_words_with_basic_ops(words, index, wi, SPLIT)
+        for i, word in enumerate(built_words):
+            if self.isword(word):
+                first = word.split('-')[0]
+                second = word.split('-')[1]
+                prob = float(self.onegram_probability(first) + self.onegram_probability(second)) / 2
+                if word not in possible_words_prob_dict:
+                    possible_words_prob_dict[word] = prob
+                    possible_ops_dict[word] = ops[i]
+
+        built_words, ops = self.basic_ops.generate_words_with_basic_ops(words, index, wi, MERGE)
+        for i, word in enumerate(built_words):
+            if self.isword(word):
+                temp_word = word.replace("#", "")
+                prob = self.onegram_probability(temp_word)
+                if word not in possible_words_prob_dict:
+                    possible_words_prob_dict[word] = prob
+                    possible_ops_dict[word] = ops[i]
+
+        n_best_possible_words = sorted(possible_words_prob_dict, key=possible_words_prob_dict.get, reverse=True)[:17]
+        n_best_possible_ops = [possible_ops_dict[key] for key in n_best_possible_words]
+        n_best_possible_words.append(wi)
+        n_best_possible_ops.append(NOTHING)
+        return n_best_possible_words, n_best_possible_ops
+
+    def context_base_filter(self, candidate_list, next_candidates, next_next_candidates, prev_word, current_word):
+        word_prob_dict = {}
+        word_ops_dict = {}
+        next_next_candidate_list = []
+        next_next_operation_list = []
+
+        candidate_list, operation_list = candidate_list
+        if next_candidates is not None:
+            next_candidate_list, next_operation_list = next_candidates
+        else:
+            next_candidate_list, next_operation_list = [None], NOTHING
+
+        if next_next_candidates is not None:
+            next_next_candidate_list, next_next_operation_list = next_next_candidates
+        else:
+            next_candidate_list, next_operation_list = [None], NOTHING
+
+        for i, candidate in enumerate(candidate_list):
+            operation = operation_list[i]
+
+            if operation == SPLIT:
+                next_bigram_score = -1000
+                first = candidate[:candidate.find('-')]
+                second = candidate[candidate.find('-') + 1:]
+                candidate = first
+                next_word = second
+
+                onegram_score = self.onegram_probability(candidate)
+                bigram_score_with_prev = self.bigram_probability(prev_word, candidate)
+                tmp_score_next = self.bigram_probability(candidate, next_word)
+
+                for j, next_next_word in enumerate(next_candidate_list):
+                    opt = next_operation_list[j]
+                    if opt == MERGE:
+                        next_next_word = next_next_word.replace("#", "")
+                    elif opt == SPLIT:
+                        next_next_word = next_next_word.split('-')[0]
+
+                    tmp_score_next_next = self.bigram_probability(next_word, next_next_word)
+                    if tmp_score_next_next > next_bigram_score:
+                        next_bigram_score = tmp_score_next_next
+
+                next_bigram_score = float(next_bigram_score + tmp_score_next) / 2
+
+            elif operation == MERGE:
+                next_bigram_score = -1000
+                first = candidate[:candidate.find('#')]
+                second = candidate[candidate.find('#') + 1:]
+                # Merge:
+                candidate = first + second
+
+                onegram_score = self.onegram_probability(candidate)
+                bigram_score_with_prev = self.bigram_probability(prev_word, candidate)
+
+                for j, next_next_word in enumerate(next_next_candidate_list):
+                    opt = next_next_operation_list[j]
+                    if opt == MERGE:
+                        next_next_word = next_next_word.replace("#", "")
+                    elif opt == SPLIT:
+                        next_next_word = next_next_word.split('-')[0]
+
+                    temp_next_bigram_score = self.bigram_probability(candidate, next_next_word)
+                    if temp_next_bigram_score > next_bigram_score:
+                        next_bigram_score = temp_next_bigram_score
+
+            else:
+                onegram_score = self.onegram_probability(candidate)
+                bigram_score_with_prev = self.bigram_probability(prev_word, candidate)
+
+                next_bigram_score = -1000
+                for j, next_word in enumerate(next_candidate_list):
+                    opt = next_operation_list[j]
+                    if opt == MERGE:
+                        next_word = next_word.replace("#", "")
+                    elif opt == SPLIT:
+                        next_word = next_word.split('-')[0]
+
+                    temp_next_bigram_score = self.bigram_probability(candidate, next_word)
+                    if temp_next_bigram_score > next_bigram_score:
+                        next_bigram_score = temp_next_bigram_score
+
+            # adding bounces for different operations
+            if operation == SUBSTITUTION:
+                if self.is_homonym(current_word, candidate):
+                    onegram_score += 20
+                else:
+                    onegram_score += 10
+            elif operation == DELETION or operation == INSERTION:
+                onegram_score += 5
+                if '\u200c' in candidate and '\u200c' not in current_word:
+                    onegram_score += 5
+            elif operation == SPLIT or operation == MERGE:
+                onegram_score += 7
+            elif operation == NOTHING:
+                onegram_score += 20
+
+            score = 1 * onegram_score + 0.7 * bigram_score_with_prev + 0.7 * next_bigram_score
+
+            word_prob_dict[candidate_list[i]] = score
+            word_ops_dict[candidate_list[i]] = operation
+
+        best_candidates = sorted(word_prob_dict, key=word_prob_dict.get, reverse=True)
+        best_operations = [word_ops_dict[key] for key in best_candidates]
+        n = len(best_candidates)
+        if n >= 3:
+            return best_candidates[:5], best_operations[:5]
+        return best_candidates, best_operations
+
+
+class SpellCorrector:
+    def __init__(self):
+        self.word_ev = None
+
+    def is_in_potential_miss_spells(slef, wi, potential_miss_spells):
+        for i, n_best in enumerate(potential_miss_spells):
+            if wi in n_best[0]:
+                return i
+        return -1
+
+    def is_in_persian_dic(self, word: str, persian_dict: dict):
+        if word in persian_dict:
+            return True
+        return False
+
+    def miss_spell_suggestion(self, string):
+        words = TOKENIZER.tokenize_words(NORMALIZER.normalize(string))
+        prev_word = None
+        potential_miss_spells = []
+        miss_spells_suggestions = []
+
+        for index, word in enumerate(words):
+            self.word_ev = WordsEvaluation(words, index)
+            if self.is_in_persian_dic(word, PERSIAN_DICT) or word == "،":
+                continue
+            n_best = self.word_ev.filter_possible_words(words, index)
+            potential_miss_spells.append(n_best)
+
+        merged_before = False
+        for i, wi in enumerate(words):
+            self.word_ev = WordsEvaluation(words, i)
+            if self.is_in_potential_miss_spells(wi, potential_miss_spells) == -1:
+                continue
+
+            if merged_before:
+                continue
+
+            if (i + 2) < len(words):
+                miss_spell_index1 = self.is_in_potential_miss_spells(words[i + 1], potential_miss_spells)
+                miss_spell_index2 = self.is_in_potential_miss_spells(words[i + 2], potential_miss_spells)
+
+                if miss_spell_index1 != -1:
+                    next_candidates = potential_miss_spells[miss_spell_index1]
+                    if miss_spell_index2 != -1:
+                        next_next_candidates = potential_miss_spells[miss_spell_index2]
+                    else:
+                        next_next_candidates = words[i + 2], NOTHING
+                else:
+                    next_candidates = words[i + 1], NOTHING
+                    if miss_spell_index2 != -1:
+                        next_next_candidates = potential_miss_spells[miss_spell_index2]
+                    else:
+                        next_next_candidates = words[i + 2], NOTHING
+
+            elif (i + 1) < len(words):
+                miss_spell_index1 = self.is_in_potential_miss_spells(words[i + 1], potential_miss_spells)
+                if miss_spell_index1 != -1:
+                    next_candidates = potential_miss_spells[miss_spell_index1]
+                else:
+                    next_candidates = words[i + 1], NOTHING
+                next_next_candidates = None
+            else:
+                next_candidates = None
+                next_next_candidates = None
+            candidates = potential_miss_spells[self.is_in_potential_miss_spells(wi, potential_miss_spells)]
+            best_candidates, best_operations = self.word_ev.context_base_filter(candidates, next_candidates,
+                                                                                next_next_candidates, prev_word, wi)
+
+            merged_before = False
+            for j in range(len(best_candidates)):
+                if best_operations[j] == SPLIT:
+                    first = best_candidates[j].split('-')[0]
+                    second = best_candidates[j].split('-')[1]
+                    best_candidates[j] = first + " " + second
+                if best_operations[j] == MERGE:
+                    best_candidates[j] = best_candidates[j].replace("#", "")
+                    if j == len(best_candidates) - 1:
+                        merged_before = True
+
+            miss_spells_suggestions.append({words[i]: best_candidates})
+            prev_word = best_candidates[0]
+
+        return miss_spells_suggestions
