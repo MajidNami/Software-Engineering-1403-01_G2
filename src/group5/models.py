@@ -1,11 +1,9 @@
 from django.db import models
 
 
-class NGram(models.Model):
-    dataset_name = models.CharField(max_length=100)
-    context = models.TextField()
-    word = models.CharField(max_length=100)
-    frequency = models.IntegerField()
+class G25Dataset(models.Model):
+    id = models.AutoField(primary_key=True)
+    word = models.CharField(max_length=255)
 
-    def __str__(self):
-        return f"{self.dataset_name}: {self.context} -> {self.word} ({self.frequency})"
+    class Meta:
+        db_table = 'G2_5_dataset'
