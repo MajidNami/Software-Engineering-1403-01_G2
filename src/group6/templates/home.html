@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیشنهاد کلمات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .suggestions {
+            margin-top: 15px;
+        }
+        .suggestions div {
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            position: relative;
+            cursor: pointer;
+        }
+        .stars {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .stars span {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffd700;
+        }
+        .stars span:hover,
+        .stars span.active {
+            color: #ffa500;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>پیشنهاد کلمات</h1>
+    <div class="container">
+        <input type="text" id="inputText" placeholder="متن خود را وارد کنید..." onkeyup="fetchSuggestions()">
+        <div>
+            <button id="toggleSuggestions" onclick="toggleSuggestions()">خاموش کردن پیشنهادات</button>
+            <button id="toggleRating" onclick="toggleRating()">خاموش کردن امتیازدهی</button>
+        </div>
+        <div class="suggestions" id="suggestions">پیشنهادات نمایش داده می‌شوند...</div>
+    </div>
+
+    <script>
+        let suggestionsEnabled = true;
+        let ratingEnabled = true;
+
+        // خاموش/روشن کردن پیشنهادات
+        function toggleSuggestions() {
+            suggestionsEnabled = !suggestionsEnabled;
+            const toggleButton = document.getElementById("toggleSuggestions");
+            toggleButton.textContent = suggestionsEnabled ? "خاموش کردن پیشنهادات" : "روشن کردن پیشنهادات";
+            const suggestionsDiv = document.getElementById("suggestions");
+            suggestionsDiv.innerHTML = suggestionsEnabled ? "پیشنهادات نمایش داده می‌شوند..." : "پیشنهادات غیرفعال شده‌اند.";
+        }
+
+        // خاموش/روشن کردن امتیازدهی
+        function toggleRating() {
+            ratingEnabled = !ratingEnabled;
+            const toggleButton = document.getElementById("toggleRating");
+            toggleButton.textContent = ratingEnabled ? "خاموش کردن امتیازدهی" : "روشن کردن امتیازدهی";
+
+            // بروزرسانی ستاره‌ها
+            const stars = document.querySelectorAll(".stars");
+            stars.forEach(starDiv => {
+                if (ratingEnabled) {
+                    starDiv.classList.remove("hidden");
+                } else {
+                    starDiv.classList.add("hidden");
+                }
+            });
+        }
+
+        // گرفتن پیشنهادات
+        async function fetchSuggestions() {
+            if (!suggestionsEnabled) return;
+            const text = document.getElementById("inputText").value;
+            if (!text.trim()) return;
+
+            const response = await fetch(`/group6/suggest/?text=${encodeURIComponent(text)}`);
+            const data = await response.json();
+
+            const suggestionsDiv = document.getElementById("suggestions");
+            suggestionsDiv.innerHTML = "";
+
+            if (data.suggestions.length > 0) {
+                data.suggestions.forEach(word => {
+                    const suggestionDiv = document.createElement("div");
+                    suggestionDiv.textContent = word;
+
+                    // کلیک روی پیشنهاد برای افزودن به متن
+                    suggestionDiv.onclick = () => {
+                        const input = document.getElementById("inputText");
+                        input.value = input.value.trim() + " " + word;
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                    };
+
+                    // افزودن ستاره‌ها
+                    const starsDiv = document.createElement("div");
+                    starsDiv.classList.add("stars");
+                    if (!ratingEnabled) starsDiv.classList.add("hidden");
+                    for (let i = 1; i <= 5; i++) {
+                        const star = document.createElement("span");
+                        star.textContent = "★";
+                        star.dataset.rating = i;
+                        star.onclick = (e) => {
+                            e.stopPropagation(); // جلوگیری از کلیک روی پیشنهاد
+                            rateWord(word, i);
+                        };
+                        starsDiv.appendChild(star);
+                    }
+                    suggestionDiv.appendChild(starsDiv);
+
+                    suggestionsDiv.appendChild(suggestionDiv);
+                });
+            } else {
+                suggestionsDiv.textContent = "پیشنهادی برای این ورودی یافت نشد.";
+            }
+        }
+
+        // ارسال امتیاز به سرور
+        async function rateWord(word, rating) {
+            const response = await fetch(`/group6/rate/?word=${encodeURIComponent(word)}&rating=${rating}`);
+            const result = await response.json();
+            alert(result.message);
+            fetchSuggestions();
+        }
+    </script>
+</body>
+</html>
