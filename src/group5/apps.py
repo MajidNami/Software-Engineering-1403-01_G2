@@ -20,5 +20,5 @@ class Group5Config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'group5'
 
-    def ready(self):
-        create_excel_from_database()
+    # def ready(self):
+    #     create_excel_from_database()
