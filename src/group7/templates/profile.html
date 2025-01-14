@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه پروفایل</title>
+    <link rel="stylesheet" href="{% static 'group7/css/profilestyle.css' %}">
+</head>
+<body>
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if user_data.profile.image %}
+                <img src="{{ user_data.profile.image.url }}" alt="profile-image">
+            {% else %}
+                <img src="../../static/images/blank-profile.png" alt="profile-image">
+            {% endif %}
+
+        </div>
+        <h1 class="profile-name">{{ user_data.username }}</h1>
+        <p class="profile-title">{{ user_data.first_name }} {{ user_data.last_name }} </p>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-section">
+            <h2>درباره من</h2>
+            {% if user_data.profile.bio %}
+                <p>{{ user_data.profile.bio }}</p>
+            {% else %}
+                <p>هیچی نداری.</p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="profile-section">
+            <h2>پروفایل</h2>
+            <ul class="contact-info">
+                <li>📧 نام: {{ user_data.first_name }}</li>
+                <li>📧 نام خانوادگی: {{ user_data.last_name }}</li>
+                <li>📧 ایمیل: {{ user_data.email }}</li>
+                <li>📧 زمان ساخت: {{ user_data.profile.created_at }}</li>
+                <li>📧 آخرین اپدیت اطلاعات: {{ user_data.profile.updated_at }}</li>
+
+
+            </ul>
+        </div>
+
+        <div class="profile-section">
+            <h2>کلمات موردعلاقه</h2>
+            <div class="skills">
+                {% if favoritewords %}
+                    {% for favoriteword in favoritewords %}
+                        <a href="{% url 'group7:wordcart' favoriteword %}">{{ favoriteword }}</a>
+
+                    {% endfor %}
+                {% else %}
+                    <span class="skill-tag">کلمه ای رو برای مورد علاقه هات انتخاب نکردی</span>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

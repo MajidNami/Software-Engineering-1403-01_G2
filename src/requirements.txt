@@ -9,3 +9,4 @@ boto3
 mysql-connector-python
 pymysql
 hazm
+meilisearch
