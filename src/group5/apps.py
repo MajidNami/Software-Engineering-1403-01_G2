@@ -8,9 +8,11 @@ def create_excel_from_database():
 
     db_url = f"mysql+mysqlconnector://{secret.DB_USER}:{secret.DB_PASSWORD}@{secret.DB_HOST}:{secret.DB_PORT}/{secret.DB_NAME}"
     engine = create_engine(db_url, connect_args={"ssl_ca": "/path/to/ca-certificate.crt"})
+    print("start read.")
     query = "SELECT word FROM G2_5_dataset"
     df = pd.read_sql(query, con=engine)
-    file_path = (r"C:\Users\Amir hosein\Desktop\spell-correction\src\group5\logic\confs\resource\updated_persian_dic3"
+    print("start write.")
+    file_path = (r"src\group5\logic\confs\resource\updated_persian_dic3"
                  r".xlsx")
     df.to_excel(file_path, index=False, header=False, sheet_name='Words', engine='openpyxl')
 
