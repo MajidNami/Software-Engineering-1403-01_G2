@@ -1,15 +1,29 @@
 <!DOCTYPE html>
-{% load static %}
+<!--{% load static %}-->
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>یافتن هم‌معنی کلمات</title>
-    <link rel="stylesheet" href="{% static 'group7/css/stylemain.css' %}">
+    <link rel="stylesheet" href="/src/static/group7/css/stylemain.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<div class="container">
+
+
+    <div class="container">
+    <div class="topnav">
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
+        <div id="myLinks" class="menu-links">
+            <a href="#about">درباره ما</a>
+            <a href="#profile">پروفایل</a>
+        </div>
+    </div>
+
+
     <h1>یافتن هم‌معنی کلمات در جمله</h1>
     <div class="input-section">
         <textarea id="textInput" placeholder="جمله خود را اینجا وارد کنید..." rows="4"></textarea>
@@ -71,6 +85,26 @@
 
         $('#textInput').on('mouseup keyup input', updateSelectedWord);
     });
+</script>
+<!--hamburger menu-->
+<script>
+function myFunction() {
+  var x = document.getElementById("myLinks");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+function toggleMenu() {
+    const menu = document.getElementById('myLinks');
+    if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'block';
+    }
+}
+
 </script>
 </body>
 </html>
