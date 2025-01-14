@@ -3,8 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from src.group5.hashem.draft import spell_corrector
-
 
 def home(request):
     return render(request, 'index.html', {'group_number': '5'})
@@ -17,12 +15,12 @@ def handle_text_request(request):
     dataset_name = data.get('dataset_name', 'fa')
     print(text)
     print(dataset_name)
-    result = spell_corrector(text)
-    print(result)
+    # result = spell_corrector(text)
+    # print(result)
     wrong_words = []
-    for item in result:
-        for wrong_word, suggestions in item.items():
-            wrong_words.append([wrong_word, suggestions])
+    # for item in result:
+    #     for wrong_word, suggestions in item.items():
+    #         wrong_words.append([wrong_word, suggestions])
 
     response_data = {
         "wrongWords": wrong_words
