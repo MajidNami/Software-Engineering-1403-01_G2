@@ -11,121 +11,152 @@
 </head>
 <body>
 
-
 <div class="container">
     <div class="topnav">
         <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
             <i class="fa fa-bars"></i>
         </a>
         <div id="myLinks" class="menu-links">
-            <a href="{% url 'group7:about' %}">درباره ما</a>
             <a href="{% url 'group7:user_profile' %}">پروفایل</a>
+            <a href="{% url 'group7:about' %}">درباره ما</a>
+            <a href="{% url 'group7:logout' %}">خروج</a>
         </div>
     </div>
-
 
     <h1>یافتن هم‌معنی کلمات در جمله</h1>
     <div class="input-section">
         <textarea id="textInput" placeholder="جمله خود را اینجا وارد کنید..." rows="4"></textarea>
         <div class="word-info">
-            <h3>هم‌معنی‌های کلمه انتخاب شده:</h3>
+            <h3>هم‌معنی‌های کلمه:</h3>
+            <p>کلمه انتخاب‌شده: <span id="selectedWord">-</span></p>
+            <p>کلمه نزدیک:
+                <span id="matchedWord">-</span>
+                <button id="addToFavorites" style="display: none;" onclick="addToFavorites()">⭐</button>
+            </p>
             <div class="synonyms" id="synonymsContainer">
                 <span>برای دیدن هم‌معنی‌ها کلمه‌ای را انتخاب کنید</span>
             </div>
         </div>
-
     </div>
     <div class="instructions">
         <p>برای یافتن هم‌معنی کلمات، متن خود را در کادر بالا وارد کنید و کلمه موردنظر را انتخاب کنید.</p>
     </div>
 </div>
+
 <script>
-  $(document).ready(function () {
-    function getWordUnderCursor(element) {
-        const caretOffset = element.selectionStart;
-        const text = element.value;
-        const beforeCaret = text.substring(0, caretOffset);
-        const afterCaret = text.substring(caretOffset);
+// تابع برای اضافه کردن کلمه به علاقه‌مندی‌ها
+function addToFavorites() {
+    const word = $('#matchedWord').text().trim();
 
-        const start = beforeCaret.lastIndexOf(' ') + 1;
-        const end = afterCaret.indexOf(' ') === -1 ? text.length : caretOffset + afterCaret.indexOf(' ');
-
-        const word = text.substring(start, end).trim();
-        return word.length > 0 ? { word, start, end } : null;
+    if (word === '-') {
+        alert('کلمه‌ای برای افزودن وجود ندارد.');
+        return;
     }
 
-    function updateSelectedWord() {
-        const textInput = $('#textInput').get(0);
-        const selectedWord = getWordUnderCursor(textInput);
-
-        if (!selectedWord) {
-            $('#synonymsContainer').html('<span>متنی انتخاب نشده</span>');
-            return;
+    $.ajax({
+        type: 'POST',
+        url: '{% url "group7:add_favorite_word" %}',
+        data: {
+            word: word,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+            alert(response.message);
+        },
+        error: function (xhr) {
+            alert('خطا در اضافه کردن به علاقه‌مندی‌ها: ' + xhr.responseJSON.error);
         }
+    });
+}
 
-        $.ajax({
-            type: 'GET',
-            url: '{% url "group7:exact_search_words" %}',
-            data: {
-                q: selectedWord.word, // ارسال کلمه به سرور
-            },
-            success: function (response) {
-                if (response) {
-                    const synonyms = response[0].synonyms;
-                    const synonymsList = synonyms
-                        .map(syn => `<span class="synonym" data-start="${selectedWord.start}" data-end="${selectedWord.end}">${syn}</span>`)
-                        .join("");
-                    $('#synonymsContainer').html(synonymsList);
+// دریافت کلمه زیر مکان‌نما
+function getWordUnderCursor(element) {
+    const caretOffset = element.selectionStart;
+    const text = element.value;
+    const beforeCaret = text.substring(0, caretOffset);
+    const afterCaret = text.substring(caretOffset);
 
-                    // اضافه کردن کلیک به هم‌معنی‌ها
-                    $('.synonym').click(function () {
-                        const start = $(this).data('start');
-                        const end = $(this).data('end');
-                        const newWord = $(this).text();
+    const start = beforeCaret.lastIndexOf(' ') + 1;
+    const end = afterCaret.indexOf(' ') === -1 ? text.length : caretOffset + afterCaret.indexOf(' ');
 
-                        // جایگزینی کلمه در متن
-                        const textArea = $('#textInput');
-                        const originalText = textArea.val();
-                        const updatedText = originalText.substring(0, start) + newWord + originalText.substring(end);
+    const word = text.substring(start, end).trim();
+    return word.length > 0 ? { word, start, end } : null;
+}
 
-                        textArea.val(updatedText);
-                        textArea.focus();
-                    });
-                } else {
-                    $('#synonymsContainer').html('<span class="error">هیچ مترادفی برای این کلمه یافت نشد.</span>');
-                }
-            },
-            error: function (xhr, errmsg, err) {
-                $('#synonymsContainer').html('<span class="error">خطا رخ داد: ' + errmsg + '</span>');
-            }
-        });
+// به‌روزرسانی کلمه انتخاب‌شده و مترادف‌ها
+function updateSelectedWord() {
+    const textInput = $('#textInput').get(0);
+    const selectedWord = getWordUnderCursor(textInput);
+
+    if (!selectedWord) {
+        $('#selectedWord').text('-');
+        $('#matchedWord').text('-');
+        $('#synonymsContainer').html('<span>متنی انتخاب نشده</span>');
+        $('#addToFavorites').hide();
+        return;
     }
 
+    $('#selectedWord').text(selectedWord.word);
+
+    $.ajax({
+        type: 'GET',
+        url: '{% url "group7:exact_search_words" %}',
+        data: {
+            q: selectedWord.word,
+        },
+        success: function (response) {
+            if (response) {
+                const matchedWord = response[0].word;
+                $('#matchedWord').text(matchedWord);
+                $('#addToFavorites').show();
+
+                const synonyms = response[0].synonyms;
+                const synonymsList = synonyms
+                    .map(syn => `<span class="synonym" data-start="${selectedWord.start}" data-end="${selectedWord.end}">${syn}</span>`)
+                    .join("");
+                $('#synonymsContainer').html(synonymsList);
+
+                $('.synonym').click(function () {
+                    const start = $(this).data('start');
+                    const end = $(this).data('end');
+                    const newWord = $(this).text();
+
+                    const textArea = $('#textInput');
+                    const originalText = textArea.val();
+                    const updatedText = originalText.substring(0, start) + newWord + originalText.substring(end);
+
+                    textArea.val(updatedText);
+                    textArea.focus();
+                });
+            } else {
+                $('#matchedWord').text('-');
+                $('#synonymsContainer').html('<span class="error">هیچ مترادفی برای این کلمه یافت نشد.</span>');
+                $('#addToFavorites').hide();
+            }
+        },
+        error: function () {
+            $('#matchedWord').text('-');
+            $('#synonymsContainer').html('<span class="error">خطا رخ داد.</span>');
+            $('#addToFavorites').hide();
+        }
+    });
+}
+
+// مدیریت نمایش منو
+function toggleMenu() {
+    const menu = document.getElementById('myLinks');
+    if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'block';
+    }
+}
+
+// ثبت رویدادهای موردنظر
+$(document).ready(function () {
     $('#textInput').on('mouseup keyup input', updateSelectedWord);
 });
-
 </script>
 
-<!--hamburger menu-->
-<script>
-    function myFunction() {
-        var x = document.getElementById("myLinks");
-        if (x.style.display === "block") {
-            x.style.display = "none";
-        } else {
-            x.style.display = "block";
-        }
-    }
-
-    function toggleMenu() {
-        const menu = document.getElementById('myLinks');
-        if (menu.style.display === 'block') {
-            menu.style.display = 'none';
-        } else {
-            menu.style.display = 'block';
-        }
-    }
-
-</script>
 </body>
 </html>

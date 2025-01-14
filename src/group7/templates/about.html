@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>درباره سرویس مترادف واژگان فارسی</title>
     <link rel="stylesheet" href="{% static 'group7/css/style.css' %}">
+    <!-- افزودن Font Awesome برای آیکون‌های GitHub -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pM3iKQoIzj/..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 <div class="container">
-    <button class="back-button" onclick="location.href ='{% url 'group7:group7' %}'"><span class="back-icon">&#8592;</span>
-        بازگشت
+    <button class="back-button" onclick="location.href ='{% url 'group7:group7' %}'">
+        <span class="back-icon">&#8592;</span> بازگشت
     </button>
-
 
     <header>
         <h1>سرویس مترادف واژگان فارسی</h1>
@@ -38,11 +39,33 @@
         <section class="contact">
             <h2>تماس با ما</h2>
             <p>برای ارتباط با تیم پشتیبانی و ارسال پیشنهادات، لطفاً با ما در تماس باشید.</p>
+
+            <!-- افزودن لینک‌های GitHub -->
+            <div class="github-links">
+                <h3>لینک‌های GitHub ما:</h3>
+                <ul>
+                    <li>
+                        <a href="https://github.com/Hessam-Hosseinian" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> Hessam-Hosseinian
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/blep555" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> blep555
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/sadrashadmehry" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> sadrashadmehry
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </section>
     </main>
 
     <footer>
-        <p>تمامی حقوق محفوظ است &copy; ۱۴۰۲</p>
+        <p>تمامی حقوق محفوظ است &copy; 1403</p>
     </footer>
 </div>
 </body>
