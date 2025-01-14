@@ -96,7 +96,6 @@
         let suggestionsEnabled = true;
         let ratingEnabled = true;
 
-        // خاموش/روشن کردن پیشنهادات
         function toggleSuggestions() {
             suggestionsEnabled = !suggestionsEnabled;
             const toggleButton = document.getElementById("toggleSuggestions");
@@ -105,13 +104,10 @@
             suggestionsDiv.innerHTML = suggestionsEnabled ? "پیشنهادات نمایش داده می‌شوند..." : "پیشنهادات غیرفعال شده‌اند.";
         }
 
-        // خاموش/روشن کردن امتیازدهی
         function toggleRating() {
             ratingEnabled = !ratingEnabled;
             const toggleButton = document.getElementById("toggleRating");
             toggleButton.textContent = ratingEnabled ? "خاموش کردن امتیازدهی" : "روشن کردن امتیازدهی";
-
-            // بروزرسانی ستاره‌ها
             const stars = document.querySelectorAll(".stars");
             stars.forEach(starDiv => {
                 if (ratingEnabled) {
@@ -122,7 +118,6 @@
             });
         }
 
-        // گرفتن پیشنهادات
         async function fetchSuggestions() {
             if (!suggestionsEnabled) return;
             const text = document.getElementById("inputText").value;
@@ -139,15 +134,15 @@
                     const suggestionDiv = document.createElement("div");
                     suggestionDiv.textContent = word;
 
-                    // کلیک روی پیشنهاد برای افزودن به متن
                     suggestionDiv.onclick = () => {
                         const input = document.getElementById("inputText");
-                        input.value = input.value.trim() + " " + word;
+                        input.value = input.value.trim() + " " + word + " ";
                         input.focus();
                         input.setSelectionRange(input.value.length, input.value.length);
+
+                        fetchSuggestions();
                     };
 
-                    // افزودن ستاره‌ها
                     const starsDiv = document.createElement("div");
                     starsDiv.classList.add("stars");
                     if (!ratingEnabled) starsDiv.classList.add("hidden");
@@ -156,7 +151,7 @@
                         star.textContent = "★";
                         star.dataset.rating = i;
                         star.onclick = (e) => {
-                            e.stopPropagation(); // جلوگیری از کلیک روی پیشنهاد
+                            e.stopPropagation();
                             rateWord(word, i);
                         };
                         starsDiv.appendChild(star);
@@ -170,7 +165,6 @@
             }
         }
 
-        // ارسال امتیاز به سرور
         async function rateWord(word, rating) {
             const response = await fetch(`/group6/rate/?word=${encodeURIComponent(word)}&rating=${rating}`);
             const result = await response.json();
