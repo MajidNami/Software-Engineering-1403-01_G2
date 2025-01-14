@@ -14,10 +14,10 @@ def home(request):
 def autocomplete_page(request):
     return render(request, 'autocomplete.html')
 
-#endpoint to return word suggestions
+
 @login_required
 def autocomplete_suggestions(request):
-    query = request.GET.get('query', '').strip()  # Get the query and remove extra spaces
+    query = request.GET.get('query', '').strip()
     
     if query:
         

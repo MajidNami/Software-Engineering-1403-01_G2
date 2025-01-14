@@ -21,7 +21,7 @@
         }
 
         body {
-            background-color: #f0f4f8;
+            background: linear-gradient(135deg, #4a90e2, #b2d3f2);
             color: #333;
             line-height: 1.6;
             direction: rtl;
@@ -31,32 +31,34 @@
             max-width: 700px;
             margin: 40px auto;
             padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
 
         h1 {
-            font-size: 1.8rem;
-            color: #476687;
+            font-size: 2rem;
+            color: #2c567a;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         #autocomplete-input {
             width: 80%;
-            padding: 12px;
-            font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid #d3e0ef;
+            border-radius: 10px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         #autocomplete-input:focus {
-            border-color: #476687;
+            border-color: #4a90e2;
             outline: none;
-            box-shadow: 0 2px 8px rgba(71, 102, 135, 0.2);
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.2);
         }
 
         #suggestions-list {
@@ -65,42 +67,40 @@
             margin: 10px 0;
             max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 2px solid #d3e0ef;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             background: white;
         }
 
         #suggestions-list li {
-            padding: 10px;
+            padding: 12px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
+            transition: background 0.3s, transform 0.2s;
         }
 
         #suggestions-list li:hover {
-            background-color: #f9f9f9;
-            transform: scale(1.02);
+            background-color: #f4f8fc;
+            transform: scale(1.03);
         }
 
         #output-field {
             width: 88%;
             height: 200px;
             font-size: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            border: 2px solid #d3e0ef;
+            border-radius: 12px;
             margin-top: 20px;
-            background-color: #f9f9f9;
+            background: #f9fbfd;
             color: #333;
             resize: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 10px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            padding: 12px;
             text-align: right;
             direction: rtl;
             overflow-y: auto;
-            vertical-align: top;
         }
-
 
         .action-buttons {
             margin-top: 15px;
@@ -108,22 +108,24 @@
 
         .action-buttons button {
             margin: 5px;
-            padding: 10px 20px;
-            font-size: 0.9rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             font-weight: bold;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
         .action-buttons button:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
 
         .green-button {
             background-color: #28a745;
             color: white;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
         }
 
         .green-button:hover {
@@ -133,6 +135,7 @@
         .red-button {
             background-color: #dc3545;
             color: white;
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
         }
 
         .red-button:hover {
@@ -142,6 +145,7 @@
         .blue-button {
             background-color: #007bff;
             color: white;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
         }
 
         .blue-button:hover {
@@ -149,24 +153,26 @@
         }
 
         #toggle-suggestions-btn {
-            background-color: #476687;
+            background: linear-gradient(135deg, #4a90e2, #5eb5f7);
             color: white;
-            padding: 10px 15px;
-            border-radius: 6px;
+            padding: 12px 20px;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: bold;
             border: none;
             margin-bottom: 15px;
             transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
         }
 
         #toggle-suggestions-btn:hover {
-            background-color: #38536c;
+            background: linear-gradient(135deg, #3c7ecf, #4fa5e8);
         }
 
         #toggle-suggestions-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.95);
         }
+
     </style>
 </head>
 <body>
@@ -210,44 +216,48 @@
 
         // Display suggestions based on input
         inputField.addEventListener("input", function () {
-            const query = this.value.trim();
+        const query = this.value.trim();
 
-            if (suggestionsEnabled && query.length > 0) {
-                fetch(`/group1/autocomplete/suggestions/?query=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        suggestionsList.innerHTML = '';
+        if (suggestionsEnabled && query.length > 0) {
+            fetch(`/group1/autocomplete/suggestions/?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsList.innerHTML = '';
 
-                        // Add suggestions
-                        data.suggestions.forEach(suggestion => {
-                            const li = document.createElement('li');
-                            li.textContent = suggestion;
+                    // Add suggestions
+                    data.suggestions.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        
+                        // Highlight the prefix
+                        const regex = new RegExp(`(${query})`, 'gi'); // Match all occurrences, case-insensitively
+                        li.innerHTML = suggestion.replace(regex, '<strong>$1</strong>');
 
-                            li.onclick = function () {
-                                const currentValue = inputField.value.trim();
-                                const words = currentValue.split(' ');
-                                words[words.length - 1] = suggestion;
-                                inputField.value = words.join(' ') + ' ';
-                                suggestionsList.innerHTML = '';
-                                inputField.focus();
 
-                                fetch(`/group1/update-frequency/`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRFToken': csrfToken,
-                                    },
-                                    body: JSON.stringify({ word: suggestion }),
-                                }).catch(console.error);
-                            };
+                        li.onclick = function () {
+                            const currentValue = inputField.value.trim();
+                            const words = currentValue.split(' ');
+                            words[words.length - 1] = suggestion;
+                            inputField.value = words.join(' ') + ' ';
+                            suggestionsList.innerHTML = '';
+                            inputField.focus();
 
-                            suggestionsList.appendChild(li);
-                        });
+                            fetch('/group1/update-frequency/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({ word: suggestion }),
+                            }).catch(console.error);
+                        };
+
+                        suggestionsList.appendChild(li);
                     });
-            } else {
-                suggestionsList.innerHTML = '';
-            }
-        });
+                });
+        } else {
+            suggestionsList.innerHTML = '';
+        }
+    });
 
         // Toggle suggestions button functionality
         toggleSuggestionsBtn.addEventListener("click", function () {
@@ -259,7 +269,11 @@
         submitBtn.addEventListener("click", function () {
             const inputValue = inputField.value.trim();
             if (inputValue) {
-                outputField.value = inputValue;
+                if (outputField.value) {
+                    outputField.value += ' ' + inputValue; // Append with a space
+                } else {
+                    outputField.value = inputValue; // Set directly if the output field is empty
+                }
                 inputField.value = '';
                 suggestionsList.innerHTML = '';
             } else {
