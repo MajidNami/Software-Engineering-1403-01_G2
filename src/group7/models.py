@@ -33,23 +33,28 @@ class Synonym(models.Model):
 
 ##----------------------------------------------------------------------------------   userprofile
 
+from django.contrib.auth.models import User
+from django.db import models
+
 class UserProfile(models.Model):
-
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    first_name = models.CharField(max_length=200, verbose_name='First Name')
-    last_name = models.CharField(max_length=200, verbose_name='Last Name')
-    email = models.EmailField(verbose_name='Email')
-    profile_image = models.ImageField(upload_to='uploads/products/')
-
-
+    first_name = models.CharField(max_length=200, null=True, blank=True, verbose_name='First Name')
+    last_name = models.CharField(max_length=200, null=True, blank=True, verbose_name='Last Name')
+    email = models.EmailField(verbose_name='Email', unique=True)
+    profile_image = models.ImageField(
+        upload_to='uploads/profiles/',
+        default='uploads/profiles/default-profile.png'
+    )
+    bio = models.TextField(null=True, blank=True, verbose_name='Biography', max_length=500)
+    additional_info = models.CharField(max_length=255, null=True, blank=True, verbose_name='Additional Information')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    bio = models.TextField(null=True, blank=True, verbose_name='Biography')
-    additional_info = models.CharField(max_length=255, null=True, blank=True, verbose_name='Additional Information')
-
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}".strip()
 
     class Meta:
         verbose_name = "User Profile"

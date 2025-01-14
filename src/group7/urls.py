@@ -1,4 +1,6 @@
 from django.urls import path
+
+from FarsiAid_website.settings import BASE_DIR
 from . import views
 from .views import *
 
@@ -18,6 +20,7 @@ urlpatterns = [
     # path('logout/', views.logout_user, name='logout'),
     # path('register/', views.register_user, name='register'),
     path('profile/', views.user_profile, name='user_profile'),
+    path('profile/edit/', views.edit_profile, name='edit_profile'),
     #
     # path('searchpage/', views.searchPage, name='searchPage'),
     #
@@ -25,3 +28,11 @@ urlpatterns = [
     # path('wordcart/<str:favoriteword>/', views.wordcart, name='wordcart'),
 
 ]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# اضافه کردن به url patterns
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

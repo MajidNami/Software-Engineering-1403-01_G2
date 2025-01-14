@@ -11,15 +11,15 @@
 <div class="profile-container">
     <div class="profile-header">
         <div class="profile-avatar">
-            {% if user_data.profile.image %}
-                <img src="{{ user_data.profile.image.url }}" alt="profile-image">
+            {% if user_data.profile.profile_image %}
+                <img src="{{ user_data.profile.profile_image.url }}" alt="profile-image">
             {% else %}
                 <img src="../../static/images/blank-profile.png" alt="profile-image">
             {% endif %}
 
         </div>
         <h1 class="profile-name">{{ user_data.username }}</h1>
-        <p class="profile-title">{{ user_data.first_name }} {{ user_data.last_name }} </p>
+        <p class="profile-title">{{ user_data.profile.first_name }} {{ user_data.profile.last_name }} </p>
     </div>
 
     <div class="profile-content">
@@ -36,16 +36,18 @@
 
         <div class="profile-section">
             <h2>پروفایل</h2>
+            <form action="{% url 'group7:edit_profile' %}" method="get" style="margin-bottom: 1rem;">
+                <button type="submit" class="edit-profile-button">ویرایش پروفایل</button>
+            </form>
             <ul class="contact-info">
-                <li>📧 نام: {{ user_data.first_name }}</li>
-                <li>📧 نام خانوادگی: {{ user_data.last_name }}</li>
+                <li>📧 نام: {{ user_data.profile.first_name }}</li>
+                <li>📧 نام خانوادگی: {{ user_data.profile.last_name }}</li>
                 <li>📧 ایمیل: {{ user_data.email }}</li>
                 <li>📧 زمان ساخت: {{ user_data.profile.created_at }}</li>
                 <li>📧 آخرین اپدیت اطلاعات: {{ user_data.profile.updated_at }}</li>
-
-
             </ul>
         </div>
+
 
         <div class="profile-section">
             <h2>کلمات موردعلاقه</h2>

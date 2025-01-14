@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایش پروفایل</title>
+    <link rel="stylesheet" href="{% static 'group7/css/editstyle.css' %}">
+</head>
+<body>
+    <div class="profile-container">
+        <h1>ویرایش پروفایل</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="button-group">
+                <button type="submit" class="save-button">ذخیره</button>
+                <a href="{% url 'group7:user_profile' %}" class="cancel-button">لغو</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

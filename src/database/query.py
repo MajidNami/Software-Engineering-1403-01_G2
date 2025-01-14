@@ -1,6 +1,8 @@
 import mysql.connector as mysql
-
 # تعریف تابع برای ایجاد اتصال به دیتابیس
+from mysql.connector import Error
+
+
 def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
     try:
         mydb = mysql.connect(
@@ -11,10 +13,28 @@ def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
             database=DB_NAME
         )
         print("Connection to MySQL DB successful")
-    except mysql.connector.Error as e:
-        print(f"The error '{e}' occurred")
-    return mydb
+        return mydb
 
+    except mysql.InterfaceError as e:
+        print(f"Interface error: {e}")
+    except mysql.ProgrammingError as e:
+        print(f"Programming error: {e}")
+    except mysql.DatabaseError as e:
+        print(f"Database error: {e}")
+    except mysql.IntegrityError as e:
+        print(f"Integrity error: {e}")
+    except mysql.DataError as e:
+        print(f"Data error: {e}")
+    except mysql.OperationalError as e:
+        print(f"Operational error: {e}")
+    except mysql.NotSupportedError as e:
+        print(f"Not supported error: {e}")
+    except Error as e:
+        print(f"General MySQL error: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
+    return None
 
 
 def create_table(mydb, create_table_query):
@@ -66,6 +86,7 @@ def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
 
 import mysql.connector as mysql
 
+
 def save_user(mydb, name, username, password, email, age):
     my_cursor = mydb.cursor()
 
@@ -74,17 +95,32 @@ def save_user(mydb, name, username, password, email, age):
     INSERT INTO users (name, username, password, email, age)
     VALUES (%s, %s, %s, %s, %s);
     """
-    
+
     try:
         # اجرای دستور و اضافه کردن کاربر
         my_cursor.execute(add_user_query, (name, username, password, email, age))
-        mydb.commit() # تایید تغییرات
+        mydb.commit()  # تایید تغییرات
         print("User saved successfully.")
+    except mysql.IntegrityError as err:
+        print("Integrity error: Possible duplicate or constraint issue.")
+        print(err)
+    except mysql.DataError as err:
+        print("Data error: Invalid data provided.")
+        print(err)
+    except mysql.OperationalError as err:
+        print("Operational error: Database connection or server issue.")
+        print(err)
+    except mysql.ProgrammingError as err:
+        print("Programming error: SQL syntax issue.")
+        print(err)
     except mysql.Error as err:
-        print("Failed to insert user:", err)
+        print("A MySQL error occurred:")
+        print(err)
+    except Exception as err:
+        print("An unexpected error occurred:")
+        print(err)
     finally:
         my_cursor.close()
-
 
 
 def save_post(mydb, description, email, state, category, image_address, image_name, image_tags, user_id):
