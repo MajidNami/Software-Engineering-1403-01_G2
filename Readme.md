@@ -106,11 +106,6 @@ To deploy the application using Docker:
 
 Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
 
-## License
-
-This project is licensed under the MIT License.
-
----
 
 ### Acknowledgments
 
