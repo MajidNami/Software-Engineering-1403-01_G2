@@ -152,8 +152,10 @@ After the first time, you simply need to do:
 ```bash
 $ git push
 ```
+### 6. Screenshots 
 
-### 6. Issue a Pull Request
+https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image.png
+### 7. Issue a Pull Request
 
 In order to have your commits merged into the main repository, you need to create a pull request. The instructions for
 this can be found in the GitHub Help
