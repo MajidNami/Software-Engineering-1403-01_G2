@@ -13,3 +13,5 @@ hazm
 parsivar
 tqdm
 datasets
+meilisearch
+googletrans
