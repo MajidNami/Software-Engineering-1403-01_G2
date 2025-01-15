@@ -9,7 +9,7 @@ DATA_HELPER = DataHelper()
 DIR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/"
 BIGRAM_LM_PATH = "/resource/mybigram_lm.pckl"
 ONEGRAM_LM_PATH = "/resource/onegram.pckl"
-PERSIAN_DICT_PATH = "src/group5/logic/confs/resource/updated_persian_dic3.xlsx"
+PERSIAN_DICT_PATH = "src/group4/logic/confs/resource/updated_persian_dic3.xlsx"
 
 # OBJECTS
 HOMONYM_CHARS = [{'ا', 'آ', 'ع'},

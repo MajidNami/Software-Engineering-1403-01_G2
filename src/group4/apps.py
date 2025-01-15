@@ -12,7 +12,7 @@ def create_excel_from_database():
     print("Start reading data from database...")
     query = "SELECT word FROM G2_5_dataset"
     df = pd.read_sql(query, con=engine)
-    file_path = (r"C:\Users\Amir hosein\Desktop\spell-correction\src\group5\logic\confs\resource/updated_persian_dic4"
+    file_path = (r"C:\Users\Amir hosein\Desktop\spell-correction\src\group4\logic\confs\resource/updated_persian_dic3"
                  r".xlsx")
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
@@ -21,9 +21,9 @@ def create_excel_from_database():
     print(f"Data successfully saved to {file_path}")
 
 
-class Group5Config(AppConfig):
+class Group4Config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'group5'
+    name = 'group4'
 
-    def ready(self):
-        create_excel_from_database()
+    # def ready(self):
+    #     create_excel_from_database()

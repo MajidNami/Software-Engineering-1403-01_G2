@@ -1,5 +1,5 @@
-const TEXT_UPLOAD_URL = "http://localhost:8000/group5/text/";
-const FILE_UPLOAD_URL = "http://localhost:8000/group5/file/";
+const TEXT_UPLOAD_URL = "http://localhost:8000/group4/text/";
+const FILE_UPLOAD_URL = "http://localhost:8000/group4/file/";
 
 const form = document.getElementById("textForm");
 const inputText = document.getElementById("inputText");

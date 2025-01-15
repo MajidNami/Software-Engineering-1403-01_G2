@@ -1,19 +1,6 @@
 from parsivar import Normalizer
 from parsivar import Tokenizer
-from src.group5.logic.confs.consts import get_bigram_lm
-from src.group5.logic.confs.consts import get_onegram_lm
-from src.group5.logic.confs.consts import get_alphabet
-from src.group5.logic.confs.consts import get_homonym_chars
-from src.group5.logic.confs.consts import get_persian_dictionary
-from src.group5.logic.confs.consts import PERSIAN_DICT_PATH
-from src.group5.logic.confs.consts import SPELL
-from src.group5.logic.confs.consts import MERGE
-from src.group5.logic.confs.consts import SPLIT
-from src.group5.logic.confs.consts import NOTHING
-from src.group5.logic.confs.consts import DELETION
-from src.group5.logic.confs.consts import INSERTION
-from src.group5.logic.confs.consts import SUBSTITUTION
-from src.group5.logic.confs.consts import TRANSPOSITION
+from src.group4.logic.confs.consts import *
 import math
 
 NORMALIZER = Normalizer()

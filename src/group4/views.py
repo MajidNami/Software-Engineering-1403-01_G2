@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from src.group5.logic.miss_spell_finder import SpellCorrector
+from src.group4.logic.miss_spell_finder import SpellCorrector
 
 
 def home(request):
