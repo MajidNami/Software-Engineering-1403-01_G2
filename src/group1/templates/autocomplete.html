@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+{% load static %}
+{% csrf_token %}
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه تکمیل خودکار</title>
+    <link rel="stylesheet" href="{% static 'base/autocomplete_style.css' %}">
+    <style>
+        @font-face {
+            font-family: 'Vazir';
+            src: url('{% static "fonts/Vazir.woff2" %}') format('woff2');
+        }
+
+        * {
+            font-family: 'Vazir', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4a90e2, #b2d3f2);
+            color: #333;
+            line-height: 1.6;
+            direction: rtl;
+        }
+
+        .autocomplete-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2c567a;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #autocomplete-input {
+            width: 80%;
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid #d3e0ef;
+            border-radius: 10px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #autocomplete-input:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.2);
+        }
+
+        #suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 2px solid #d3e0ef;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        #suggestions-list li {
+            padding: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        #suggestions-list li:hover {
+            background-color: #f4f8fc;
+            transform: scale(1.03);
+        }
+
+        #output-field {
+            width: 88%;
+            height: 200px;
+            font-size: 1rem;
+            border: 2px solid #d3e0ef;
+            border-radius: 12px;
+            margin-top: 20px;
+            background: #f9fbfd;
+            color: #333;
+            resize: none;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            text-align: right;
+            direction: rtl;
+            overflow-y: auto;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+        }
+
+        .action-buttons button {
+            margin: 5px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons button:active {
+            transform: scale(0.95);
+        }
+
+        .green-button {
+            background-color: #28a745;
+            color: white;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        .green-button:hover {
+            background-color: #218838;
+        }
+
+        .red-button {
+            background-color: #dc3545;
+            color: white;
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        .red-button:hover {
+            background-color: #c82333;
+        }
+
+        .blue-button {
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .blue-button:hover {
+            background-color: #0056b3;
+        }
+
+        #toggle-suggestions-btn {
+            background: linear-gradient(135deg, #4a90e2, #5eb5f7);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            margin-bottom: 15px;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        #toggle-suggestions-btn:hover {
+            background: linear-gradient(135deg, #3c7ecf, #4fa5e8);
+        }
+
+        #toggle-suggestions-btn:active {
+            transform: scale(0.95);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="autocomplete-container">
+        <h1>صفحه تکمیل خودکار</h1>
+        <button id="toggle-suggestions-btn">On</button>
+        <input type="text" id="autocomplete-input" placeholder="شروع به تایپ کنید...">
+        <ul id="suggestions-list"></ul>
+        <textarea id="output-field" placeholder="متن نهایی اینجا نمایش داده می‌شود..." readonly></textarea>
+        <div class="action-buttons">
+            <button id="submit-btn" class="green-button">ثبت</button>
+            <button id="clear-btn" class="red-button">🗑 پاک کردن</button>
+            <button id="save-btn" class="blue-button">📄 ذخیره</button>
+        </div>
+    </div>
+
+    <script>
+        const inputField = document.getElementById("autocomplete-input");
+        const suggestionsList = document.getElementById("suggestions-list");
+        const outputField = document.getElementById("output-field");
+        const submitBtn = document.getElementById("submit-btn");
+        const clearBtn = document.getElementById("clear-btn");
+        const saveBtn = document.getElementById("save-btn");
+        const toggleSuggestionsBtn = document.getElementById("toggle-suggestions-btn");
+
+        let suggestionsEnabled = true; // Track if suggestions are enabled or disabled
+
+        // Get CSRF token
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    return decodeURIComponent(cookie.substring(name.length + 1));
+                }
+            }
+            return null;
+        }
+
+        const csrfToken = getCookie('csrftoken');
+
+        // Display suggestions based on input
+        inputField.addEventListener("input", function () {
+        const query = this.value.trim();
+
+        if (suggestionsEnabled && query.length > 0) {
+            fetch(`/group1/autocomplete/suggestions/?query=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    suggestionsList.innerHTML = '';
+
+                    // Add suggestions
+                    data.suggestions.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        
+                        // Highlight the prefix
+                        const regex = new RegExp(`(${query})`, 'gi'); // Match all occurrences, case-insensitively
+                        li.innerHTML = suggestion.replace(regex, '<strong>$1</strong>');
+
+
+                        li.onclick = function () {
+                            const currentValue = inputField.value.trim();
+                            const words = currentValue.split(' ');
+                            words[words.length - 1] = suggestion;
+                            inputField.value = words.join(' ') + ' ';
+                            suggestionsList.innerHTML = '';
+                            inputField.focus();
+
+                            fetch('/group1/update-frequency/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: JSON.stringify({ word: suggestion }),
+                            }).catch(console.error);
+                        };
+
+                        suggestionsList.appendChild(li);
+                    });
+                });
+        } else {
+            suggestionsList.innerHTML = '';
+        }
+    });
+
+        // Toggle suggestions button functionality
+        toggleSuggestionsBtn.addEventListener("click", function () {
+            suggestionsEnabled = !suggestionsEnabled; // Toggle suggestions
+            suggestionsList.innerHTML = ''; // Clear suggestions if disabled
+            toggleSuggestionsBtn.textContent = suggestionsEnabled ? "On" : "Off";
+        });
+
+        submitBtn.addEventListener("click", function () {
+            const inputValue = inputField.value.trim();
+            if (inputValue) {
+                if (outputField.value) {
+                    outputField.value += ' ' + inputValue; // Append with a space
+                } else {
+                    outputField.value = inputValue; // Set directly if the output field is empty
+                }
+                inputField.value = '';
+                suggestionsList.innerHTML = '';
+            } else {
+                alert("لطفا ابتدا متن را وارد کنید");
+            }
+        });
+
+        clearBtn.addEventListener("click", function () {
+            outputField.value = '';
+        });
+
+        saveBtn.addEventListener("click", function () {
+            const text = outputField.value.trim();
+            if (text) {
+                const blob = new Blob([text], { type: 'text/plain' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "output.txt";
+                link.click();
+            } else {
+                alert("متنی برای ذخیره وجود ندارد");
+            }
+        });
+
+
+        /* Keyboard navigation for suggestions */
+
+        let currentIndex = -1; //Tracks the currently highlighted suggestion
+
+        inputField.addEventListener("keydown", function (event) {
+            const items = Array.from(suggestionsList.children);
+            if (items.length > 0) {
+                if (event.key === "ArrowDown") {
+                    currentIndex = (currentIndex + 1) % items.length;
+                    highlightSuggestion(items);
+                    event.preventDefault();
+                } else if (event.key === "ArrowUp") {
+                    currentIndex = (currentIndex - 1 + items.length) % items.length;
+                    highlightSuggestion(items);
+                    event.preventDefault();
+                } else if (event.key === "Enter" && currentIndex >= 0) {
+                    items[currentIndex].click();
+                    event.preventDefault();
+                }
+            }
+        });
+
+        function highlightSuggestion(items) {
+            items.forEach((item, index) => {
+                if (index === currentIndex) {
+                    item.style.backgroundColor = "#e0e0e0";
+                    item.style.fontWeight = "bold";
+                } else {
+                    item.style.backgroundColor = "";
+                    item.style.fontWeight = "normal";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
