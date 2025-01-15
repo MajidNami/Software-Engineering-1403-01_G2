@@ -1,33 +1,21 @@
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 
 from transformers import pipeline
 import hazm
 
-SCORES_FILE = "word_scores.json"
-
-def load_scores():
-    try:
-        with open(SCORES_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-def save_scores(scores):
-    with open(SCORES_FILE, "w", encoding="utf-8") as f:
-        json.dump(scores, f, ensure_ascii=False, indent=4)
-
-def home(request):
-    return render(request, "home.html")
-
-
+FEEDBACK_FILE = "group6/system_feedback.json"
+GENERATED_TEXTS_DIR = "generated_texts"
 
 normalizer = hazm.Normalizer(persian_numbers=False)
+generator = pipeline('text-generation', "./group6/gpt2-fa")
+
 
 def normalize_input(text):
     text = normalizer.normalize(text)
     return text
+
 
 def sents_as_output(text, num_sents=1):
     sents = hazm.sent_tokenize(text)
@@ -35,19 +23,33 @@ def sents_as_output(text, num_sents=1):
         return " ".join(sents[:num_sents])
     return " ".join(sents[0])
 
-generator = pipeline('text-generation', "./group6/gpt2-fa")
-
 
 def count_words(text):
     words = hazm.word_tokenize(text)
     return len(words)
 
-def suggest_word(request):
-    scores = load_scores()
-    text = request.GET.get("text", "").strip()
 
+def load_feedback():
+    try:
+        with open(FEEDBACK_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {"ratings": [], "average": 0}
+
+
+def save_feedback(feedback_data):
+    with open(FEEDBACK_FILE, "w", encoding="utf-8") as f:
+        json.dump(feedback_data, f, ensure_ascii=False, indent=4)
+
+
+def home(request):
+    return render(request, "home.html")
+
+
+def suggest_word(request):
+    text = request.GET.get("text", "").strip()
     text = normalize_input(text)
-    print(count_words(text))
+
     outputs = generator(text, max_new_tokens=1, num_return_sequences=20)
     unique_suggestions = set()
 
@@ -61,19 +63,29 @@ def suggest_word(request):
             break
 
     suggestions = list(unique_suggestions)
-    print(suggestions)
+    return JsonResponse({"suggestions": suggestions})
 
-    last_word = text.split()[-1] if text else ""
-    suggestion_scores = {word: scores.get(word, 0) for word in suggestions}
-    return JsonResponse({"suggestions": suggestions, "scores": suggestion_scores})
 
-def rate_word(request):
-    word = request.GET.get("word", "").strip()
+def system_feedback(request):
     rating = int(request.GET.get("rating", 0))
-    scores = load_scores()
+    feedback_data = load_feedback()
 
-    if word:
-        scores[word] = scores.get(word, 0) + rating
-        save_scores(scores)
-        return JsonResponse({"message": f"امتیاز برای '{word}' ثبت شد.", "new_score": scores[word]})
-    return JsonResponse({"message": "کلمه نامعتبر است."})
+    feedback_data["ratings"].append(rating)
+    total_ratings = len(feedback_data["ratings"])
+    feedback_data["average"] = sum(feedback_data["ratings"]) / total_ratings
+
+    save_feedback(feedback_data)
+    return JsonResponse({
+        "message": "بازخورد شما با موفقیت ثبت شد.",
+        "average_rating": feedback_data["average"]
+    })
+
+
+def download_text(request):
+    text = request.GET.get("text", "").strip()
+    if not text:
+        return JsonResponse({"error": "متن خالی است."})
+
+    response = HttpResponse(text, content_type='text/plain;charset=utf-8')
+    response['Content-Disposition'] = 'attachment; filename="generated_text.txt"'
+    return response

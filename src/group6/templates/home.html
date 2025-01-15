@@ -57,27 +57,32 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f7f7f7;
-            position: relative;
             cursor: pointer;
         }
+        .system-rating {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
         .stars {
-            position: absolute;
-            top: 5px;
-            right: 10px;
             display: flex;
+            justify-content: center;
             gap: 5px;
+            margin: 10px 0;
         }
         .stars span {
             cursor: pointer;
-            font-size: 18px;
+            font-size: 24px;
+            color: #ddd;
+        }
+        .stars span.active {
             color: #ffd700;
         }
-        .stars span:hover,
-        .stars span.active {
-            color: #ffa500;
-        }
-        .hidden {
-            display: none;
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -85,16 +90,26 @@
     <h1>پیشنهاد کلمات</h1>
     <div class="container">
         <input type="text" id="inputText" placeholder="متن خود را وارد کنید..." onkeyup="fetchSuggestions()">
-        <div>
+        <div class="actions">
             <button id="toggleSuggestions" onclick="toggleSuggestions()">خاموش کردن پیشنهادات</button>
-            <button id="toggleRating" onclick="toggleRating()">خاموش کردن امتیازدهی</button>
+            <button onclick="downloadText()">دانلود متن</button>
         </div>
         <div class="suggestions" id="suggestions">پیشنهادات نمایش داده می‌شوند...</div>
+
+        <div class="system-rating">
+            <h3>نظر شما درباره عملکرد سیستم</h3>
+            <div class="stars" id="systemStars">
+                <span onclick="rateSystem(1)">★</span>
+                <span onclick="rateSystem(2)">★</span>
+                <span onclick="rateSystem(3)">★</span>
+                <span onclick="rateSystem(4)">★</span>
+                <span onclick="rateSystem(5)">★</span>
+            </div>
+        </div>
     </div>
 
     <script>
         let suggestionsEnabled = true;
-        let ratingEnabled = true;
 
         function toggleSuggestions() {
             suggestionsEnabled = !suggestionsEnabled;
@@ -104,26 +119,14 @@
             suggestionsDiv.innerHTML = suggestionsEnabled ? "پیشنهادات نمایش داده می‌شوند..." : "پیشنهادات غیرفعال شده‌اند.";
         }
 
-        function toggleRating() {
-            ratingEnabled = !ratingEnabled;
-            const toggleButton = document.getElementById("toggleRating");
-            toggleButton.textContent = ratingEnabled ? "خاموش کردن امتیازدهی" : "روشن کردن امتیازدهی";
-            const stars = document.querySelectorAll(".stars");
-            stars.forEach(starDiv => {
-                if (ratingEnabled) {
-                    starDiv.classList.remove("hidden");
-                } else {
-                    starDiv.classList.add("hidden");
-                }
-            });
-        }
-
         async function fetchSuggestions() {
             if (!suggestionsEnabled) return;
             const text = document.getElementById("inputText").value;
             if (!text.trim()) return;
 
+
             const response = await fetch(`/group6/suggest/?text=${encodeURIComponent(text)}`);
+
             const data = await response.json();
 
             const suggestionsDiv = document.getElementById("suggestions");
@@ -139,24 +142,8 @@
                         input.value = input.value.trim() + " " + word + " ";
                         input.focus();
                         input.setSelectionRange(input.value.length, input.value.length);
-
                         fetchSuggestions();
                     };
-
-                    const starsDiv = document.createElement("div");
-                    starsDiv.classList.add("stars");
-                    if (!ratingEnabled) starsDiv.classList.add("hidden");
-                    for (let i = 1; i <= 5; i++) {
-                        const star = document.createElement("span");
-                        star.textContent = "★";
-                        star.dataset.rating = i;
-                        star.onclick = (e) => {
-                            e.stopPropagation();
-                            rateWord(word, i);
-                        };
-                        starsDiv.appendChild(star);
-                    }
-                    suggestionDiv.appendChild(starsDiv);
 
                     suggestionsDiv.appendChild(suggestionDiv);
                 });
@@ -165,11 +152,25 @@
             }
         }
 
-        async function rateWord(word, rating) {
-            const response = await fetch(`/group6/rate/?word=${encodeURIComponent(word)}&rating=${rating}`);
+        async function rateSystem(rating) {
+            const stars = document.querySelectorAll('#systemStars span');
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+
+            const response = await fetch(`/group6/system-feedback/?rating=${rating}`);
             const result = await response.json();
             alert(result.message);
-            fetchSuggestions();
+        }
+
+        async function downloadText() {
+            const text = document.getElementById("inputText").value;
+            if (!text.trim()) {
+                alert("لطفا متنی وارد کنید.");
+                return;
+            }
+
+            window.location.href = `/group6/download-text/?text=${encodeURIComponent(text)}`;
         }
     </script>
 </body>
