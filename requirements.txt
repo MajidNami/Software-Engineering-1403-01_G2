@@ -7,7 +7,11 @@ pillow
 django-storages
 boto3
 mysql-connector-python
+mysqlclient
 pymysql
 hazm
+parsivar
+tqdm
+datasets
 meilisearch
 googletrans
