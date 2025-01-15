@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background: linear-gradient(90deg, #ffe5d9, #6b46c1 50%, #90e0ef 100%);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
 }
@@ -69,7 +69,7 @@ body {
 
 .word {
   font-size: 3.5rem;
-  background: linear-gradient(45deg, #FF3366, #FF9933, #33FF99);
+  background: linear-gradient(135deg, #6b46c1 0%, #4299e1 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -103,7 +103,7 @@ body {
   transform: translateX(-50%);
   width: 80px;
   height: 4px;
-  background: linear-gradient(45deg, #FF3366, #FF9933);
+  background: linear-gradient(135deg, #6b46c1 0%, #4299e1 100%);
   border-radius: 4px;
 }
 
@@ -135,7 +135,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, #FF3366, #FF9933);
+  background: linear-gradient(90deg, #ffe5d9, #6b46c1 0%, #4299e1 100%);
   opacity: 0;
   transition: 0.4s;
   z-index: -1;
@@ -197,7 +197,8 @@ body {
     display: inline-flex;
     align-items: center;
     padding: 0.8rem 1.5rem;
-    background: linear-gradient(135deg, #3498db, #2ecc71);
+    /*background: linear-gradient(90deg, #90e0ef, #6b46c1 100%, #caf0f8 30%);*/
+    background: #495057;
     color: white;
     text-decoration: none;
     border: none; /* تغییر به none برای دکمه */
@@ -210,6 +211,7 @@ body {
 
 .back-button:hover {
     transform: translateY(-2px);
+    background: linear-gradient(90deg, #90e0ef, #6b46c1 100%, #caf0f8 30%);
     box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
 }
 
