@@ -1,112 +1,175 @@
+# Software-Engineering
 
-# FarsiAid Website
+Software engineering microservice project
 
-Icarus project is a micro-service meant for developing articles etc. purposes, gathered around under the name group 7 and was developed as part of the **Software Engineering 1403-01 G2 Dr. Kalbasi** course and is built using Django. The application is powered by MeiliSearch for efficient word search and synonym suggestions.
+# How to submit your project?
 
-## Features
+_Please ensure that you read the following information before issuing a pull request. Also refer back to this document as a checklist before issuing your pull request. This will save time for everyone._
 
-- Suggest synonyms for Persian words.
-- Suggest defenitions for english words in persian.
-- User-friendly web interface.
-- Organized structure for managing database and application logic.
-- Media and static files support.
-- Storing user favourite words labeled as starred words.
-- Powered by MeiliSearch for fast and efficient text search.
+## Before You Start
 
-## Project Structure
+### Understanding the Basics
 
-The main components of the project are organized as follows:
+If you don't understand what a _pull request_ is, or how to submit one, please refer to
+the [help documentation](https://help.github.com/articles/about-pull-requests/)
+provided by GitHub.
 
+### Coding standards
+
+Please ensure you follow the coding standards used throughout the existing code base.
+You are free to use any language but keep in mind:
+
+- Follow the principles of clean coding.
+- Names should be clear and meaningful. Use Intention-Revealing names. The name of a variable should be sufficient to
+  understand its purpose. Don't be afraid of long names.
+- Functions must be coherent. Keep related parts close together and move from the general to the specifics.
+  Approach each function as if it were a narrative, crafted to guide the reader smoothly from start to finish.
+- keep functions small. even smaller.
+- Try to make meaningful commits and branches.
+- You are the authors! Do respect your audience.
+
+### Structure Guidelines
+
+In the main branch of the repo in `src` directory, there is a folder for each team. Each folder is for a separate project.
+Please just change your folder and put all the items related to your project in the same folder.
+If you need to change the rest of the sections, please ensure [coordination first](#question-or-problem).
+
+### Question or Problem?
+
+Your inquiries and feedback are always welcome. For any questions or concerns,
+please reach out via Telegram to: [@k3rn3lpanic](https://t.me/k3rn3lpanic).
+
+## Submitting a Pull Request
+
+The following are the general steps you should follow in creating a pull request. Subsequent pull requests only need
+to follow step 3 and beyond:
+
+1. Fork the repository on GitHub
+2. Clone the forked repository to your machine
+3. Create a new branch from the `main` branch for your fork for the contribution
+4. Make your changes using descriptive commit messages to your local repository
+5. Push your commits to your GitHub remote fork repository
+6. Issue a Pull Request to the official repository targeting the `main` branch
+7. Your Pull Request is reviewed by a committer and merged into the repository
+
+_Note_ While there are other ways to accomplish the steps using other tools, the examples here will assume the most
+actions will be performed via the `git` command line.
+
+### 1. Fork the Repository
+
+When logged into your GitHub account, and you are viewing one of the main repositories, you will see the _Fork_ button.
+Clicking this button will show you which repositories your can fork to. Choose your own account. Once the process
+finishes, you will have your own repository that is "forked" from the GitHub one.
+
+Forking is a GitHub term and not a git term. Git is a wholly distributed source control system and simply worries
+about local and remote repositories and allows you to manage your code against them. GitHub then adds this additional
+layer of structure of how repositories can relate to each other.
+
+For more information on maintaining a fork, please see the GitHub Help
+article [Fork a Repo](https://help.github.com/articles/fork-a-repo).
+
+### 2. Clone the Forked Repository
+
+Once you have successfully forked your repository, you will need to clone it locally to your machine:
+
+```bash
+$ git clone git@github.com:YOUR-USERNAME/Software-Engineering-1403-01_G2.git
 ```
-Software-Engineering-1403-01_G2
-├── .venv/                # Virtual environment for dependencies
-├── data.ms/             # Data files
-├── dumps/               # Database dumps
-├── src/
-│   ├── database/           # Database-related files
-│   ├── FarsiAid_website/   # Django project configuration
-│   ├── group1 - group10/    # Submodules or app components
-│   ├── media/              # Uploaded media files
-│   ├── registration/       # User registration and authentication
-│   ├── static/             # Static files (CSS, JS, images)
-│   ├── templates/         # HTML templates
-│   ├── manage.py          # Django management script
-├── db.sqlite3            # SQLite database
-├── requirements.txt      # Python dependencies
-├── docker-compose.yml    # Docker Compose configuration
-├── Dockerfile            # Dockerfile for containerization
-├── Readme.md             # Project documentation
+
+This will clone your fork to your current path in a directory named `Software-Engineering-1403-01_G2`.
+
+You should also set up the `upstream` repository to sync your fork with the upstream repository. This will allow you to take changes and merge them into your local clone and then push them to your fork repository:
+
+```bash
+$ cd Software-Engineering-1403-01_G2
+$ git remote add upstream git@github.com:MajidNami/Software-Engineering-1403-01_G2.git
+$ git fetch upstream
 ```
 
-## Screenshots
+Then you can retrieve upstream changes and rebase on them into your code like this:
 
-Here are some screenshots of the project:
+```bash
+$ git pull --rebase upstream main
+```
 
-![Screenshot 1](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image.png)
-![Screenshot 2](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(3).png)
-![Screenshot 3](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(1).png)
-![Screenshot 4](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(2).png)
+For more information on rebasing, see [rebasing](http://git-scm.com/book/en/Git-Branching-Rebasing) from git.
 
-## Prerequisites
+### 3. Create a Branch
 
-- Python 3.8+
-- Django 4.0+
-- MeiliSearch
-- Docker and Docker Compose (optional, for containerized deployment)
+The easiest workflow is to keep your main branch in sync with the upstream branch and do not locate any of your own
+commits in that branch. When you want to work on a new feature, you then ensure you are on the main branch and create
+a new branch from there. While the name of the branch can be anything, it is highly recommended to use clear and
+conceptual naming.
 
-## Installation
+```bash
+$ git checkout -b adding-feature-y-on-project-x main
+Switched to a new branch 'adding-feature-y-on-project-x'
+```
 
-1. **Clone the repository:**
+You will then be on the feature branch. You can verify what branch you are on like this:
 
-   ```bash
-   git clone https://github.com/your-username/FarsiAid.git
-   cd FarsiAid
-   ```
+```bash
+$ git status
+On branch adding-feature-y-on-project-x
+nothing to commit, working directory clean
+```
 
-2. **Create a virtual environment:**
+### 4. Make Changes and Commit
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
+Now you just need to make your changes. Once you have finished your changes (and tested them) you need to commit them
+to your local repository (assuming you have staged your changes for committing):
 
-3. **Install dependencies:**
+```bash
+$ git status
+# On branch adding-feature-y-on-project-x
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#        modified:   some_file.go
+#
+$ git commit -m "Add feature y"
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+```
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 5. Rebase and Push Changes
 
-4. **Run the MeiliSearch server:**
+If you have been working on your contribution for a while, the upstream repository may have changed. You may want to
+ensure your work is on top of the latest changes so your pull request can be applied cleanly:
 
-   - Start `meilisearch.exe` included in the project directory.
+```bash
+$ git pull --rebase upstream main
+```
 
-5. **Apply migrations and run the server:**
+When you are ready to push your commit to your GitHub repository for the first time on this branch you would do the
+following:
 
-   ```bash
-   python manage.py migrate
-   python manage.py runserver
-   ```
+```bash
+$ git push -u origin adding-feature-y-on-project-x
+```
 
-6. **Access the application:**
-   Open your browser and navigate to `http://127.0.0.1:8000/`.
+After the first time, you simply need to do:
 
-## Deployment
+```bash
+$ git push
+```
 
-To deploy the application using Docker:
+### 6. Issue a Pull Request
 
-1. Build and start the containers:
+In order to have your commits merged into the main repository, you need to create a pull request. The instructions for
+this can be found in the GitHub Help
+Article [Creating a Pull Request](https://help.github.com/articles/creating-a-pull-request). Essentially you do the
+following:
 
-   ```bash
-   docker-compose up --build
-   ```
+1. Go to the site for your repository.
+2. Click the Pull Request button.
+3. Select the feature branch from your repository.
+4. Enter a title and description of your pull request.
+5. Review the commit and files changed tabs.
+6. Click `Send Pull Request`
 
-2. Access the application at `http://localhost:8000/`.
+You will get notified about the status of your pull request based on your GitHub settings.
 
-## Contributing
+### 7. Request is Reviewed and Merged
 
-Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
-
-
-### Acknowledgments
-
-This project was developed as part of an academic course. Special thanks to the course instructors and team members for their support and collaboration.
+Your request will be reviewed. It may be merged directly, or you may receive feedback or questions on your pull
+request.
