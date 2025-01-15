@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یافتن هم‌معنی کلمات</title>
+    <link rel="stylesheet" href="{% static 'group7/css/stylemain.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="topnav">
+        <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </a>
+        <div id="myLinks" class="menu-links">
+            <a href="{% url 'group7:user_profile' %}">پروفایل</a>
+            <a href="{% url 'group7:about' %}">درباره ما</a>
+            <a href="{% url 'group7:logout' %}">خروج</a>
+        </div>
+    </div>
+
+    <h1>یافتن هم‌معنی کلمات در جمله</h1>
+    <div class="input-section">
+        <textarea id="textInput" placeholder="جمله خود را اینجا وارد کنید..." rows="4"></textarea>
+        <div class="word-info">
+            <h3>هم‌معنی‌های کلمه:</h3>
+            <p>کلمه انتخاب‌شده: <span id="selectedWord">-</span></p>
+            <p>کلمه نزدیک:
+                <span id="matchedWord">-</span>
+                <button id="addToFavorites" style="display: none;" onclick="addToFavorites()">⭐</button>
+            </p>
+            <div class="synonyms" id="synonymsContainer">
+                <span>برای دیدن هم‌معنی‌ها کلمه‌ای را انتخاب کنید</span>
+            </div>
+        </div>
+    </div>
+    <div class="instructions">
+        <p>برای یافتن هم‌معنی کلمات، متن خود را در کادر بالا وارد کنید و کلمه موردنظر را انتخاب کنید.</p>
+    </div>
+</div>
+
+<script>
+// تابع برای اضافه کردن کلمه به علاقه‌مندی‌ها
+function addToFavorites() {
+    const word = $('#matchedWord').text().trim();
+
+    if (word === '-') {
+        alert('کلمه‌ای برای افزودن وجود ندارد.');
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "group7:add_favorite_word" %}',
+        data: {
+            word: word,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        success: function (response) {
+            alert(response.message);
+        },
+        error: function (xhr) {
+            alert('خطا در اضافه کردن به علاقه‌مندی‌ها: ' + xhr.responseJSON.error);
+        }
+    });
+}
+
+// دریافت کلمه زیر مکان‌نما
+function getWordUnderCursor(element) {
+    const caretOffset = element.selectionStart;
+    const text = element.value;
+    const beforeCaret = text.substring(0, caretOffset);
+    const afterCaret = text.substring(caretOffset);
+
+    const start = beforeCaret.lastIndexOf(' ') + 1;
+    const end = afterCaret.indexOf(' ') === -1 ? text.length : caretOffset + afterCaret.indexOf(' ');
+
+    const word = text.substring(start, end).trim();
+    return word.length > 0 ? { word, start, end } : null;
+}
+
+// به‌روزرسانی کلمه انتخاب‌شده و مترادف‌ها
+function updateSelectedWord() {
+    const textInput = $('#textInput').get(0);
+    const selectedWord = getWordUnderCursor(textInput);
+
+    if (!selectedWord) {
+        $('#selectedWord').text('-');
+        $('#matchedWord').text('-');
+        $('#synonymsContainer').html('<span>متنی انتخاب نشده</span>');
+        $('#addToFavorites').hide();
+        return;
+    }
+
+    $('#selectedWord').text(selectedWord.word);
+
+    $.ajax({
+        type: 'GET',
+        url: '{% url "group7:exact_search_words" %}',
+        data: {
+            q: selectedWord.word,
+        },
+        success: function (response) {
+            if (response) {
+                const matchedWord = response[0].word;
+                $('#matchedWord').text(matchedWord);
+                $('#addToFavorites').show();
+
+                const synonyms = response[0].synonyms;
+                const synonymsList = synonyms
+                    .map(syn => `<span class="synonym" data-start="${selectedWord.start}" data-end="${selectedWord.end}">${syn}</span>`)
+                    .join("");
+                $('#synonymsContainer').html(synonymsList);
+
+                $('.synonym').click(function () {
+                    const start = $(this).data('start');
+                    const end = $(this).data('end');
+                    const newWord = $(this).text();
+
+                    const textArea = $('#textInput');
+                    const originalText = textArea.val();
+                    const updatedText = originalText.substring(0, start) + newWord + originalText.substring(end);
+
+                    textArea.val(updatedText);
+                    textArea.focus();
+                });
+            } else {
+                $('#matchedWord').text('-');
+                $('#synonymsContainer').html('<span class="error">هیچ مترادفی برای این کلمه یافت نشد.</span>');
+                $('#addToFavorites').hide();
+            }
+        },
+        error: function () {
+            $('#matchedWord').text('-');
+            $('#synonymsContainer').html('<span class="error">خطا رخ داد.</span>');
+            $('#addToFavorites').hide();
+        }
+    });
+}
+
+// مدیریت نمایش منو
+function toggleMenu() {
+    const menu = document.getElementById('myLinks');
+    if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'block';
+    }
+}
+
+// ثبت رویدادهای موردنظر
+$(document).ready(function () {
+    $('#textInput').on('mouseup keyup input', updateSelectedWord);
+});
+</script>
+
+</body>
+</html>

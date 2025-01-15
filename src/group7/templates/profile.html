@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه پروفایل</title>
+    <!-- بارگذاری Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-pVneO/xkI" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'group7/css/profilestyle.css' %}">
+{#    <link href=" 'https://fonts.googleapis.com/css?family=Lalezar' rel='stylesheet">#}
+</head>
+<body>
+<a href="{% url 'group7:group7' %}" class="back-button">
+    <i class="fas fa-arrow-left back-icon"></i> بازگشت
+</a>
+<div class="profile-container">
+
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if user_data.profile.profile_image %}
+                <img src="{{ user_data.profile.profile_image.url }}" alt="تصویر پروفایل">
+            {% else %}
+                <img src="{% static 'images/blank-profile.png' %}" alt="تصویر پروفایل پیش‌فرض">
+            {% endif %}
+        </div>
+        <!-- دکمه بازگشت به داخل profile-header -->
+
+        <h1 class="profile-name">{{ user_data.username }}</h1>
+        <p class="profile-title">{{ user_data.profile.first_name }} {{ user_data.profile.last_name }}</p>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-section">
+            <h2><i class="fas fa-user"></i> درباره من</h2>
+            {% if user_data.profile.bio %}
+                <p>{{ user_data.profile.bio }}</p>
+            {% else %}
+                <p>هیچی نداری.</p>
+            {% endif %}
+        </div>
+
+        <div class="profile-section">
+            <h2><i class="fas fa-id-badge"></i> پروفایل</h2>
+            <form action="{% url 'group7:edit_profile' %}" method="get" class="edit-profile-form">
+                <button type="submit" class="edit-profile-button">ویرایش پروفایل</button>
+            </form>
+            <ul class="contact-info">
+                <li><i class="fas fa-user"></i> نام: {{ user_data.profile.first_name }}</li>
+                <li><i class="fas fa-user-tag"></i> نام خانوادگی: {{ user_data.profile.last_name }}</li>
+                <li><i class="fas fa-envelope"></i> ایمیل: {{ user_data.email }}</li>
+                <li><i class="fas fa-clock"></i> زمان ساخت: {{ user_data.profile.created_at }}</li>
+                <li><i class="fas fa-sync-alt"></i> آخرین به‌روزرسانی: {{ user_data.profile.updated_at }}</li>
+            </ul>
+        </div>
+
+        <div class="profile-section">
+            <h2><i class="fas fa-heart"></i> کلمات موردعلاقه</h2>
+            <div class="skills">
+                {% if favoritewords %}
+                    {% for favoriteword in favoritewords %}
+                        <a href="{% url 'group7:wordcard' favoriteword %}" class="skill-tag">{{ favoriteword }}</a>
+                    {% endfor %}
+                {% else %}
+                    <span class="skill-tag">کلمه‌ای را برای مورد علاقه‌هایت انتخاب نکرده‌ای</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- اگر نیاز به tooltip دارید می‌توانید از کلاس‌های tooltip-container استفاده کنید -->
+<!-- نمونه‌ای از استفاده Tooltip -->
+<!--
+<div class="tooltip-container">
+    <span class="text">Hover me</span>
+    <span class="tooltip">Tooltip text</span>
+</div>
+-->
+
+<script>
+    // اگر نیاز به اسکریپت‌های اضافی دارید می‌توانید آن‌ها را اینجا اضافه کنید
+</script>
+</body>
+</html>

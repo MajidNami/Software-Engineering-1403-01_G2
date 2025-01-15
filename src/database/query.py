@@ -1,5 +1,6 @@
 import mysql.connector as mysql
 
+
 # تعریف تابع برای ایجاد اتصال به دیتابیس
 def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
     try:
@@ -16,7 +17,6 @@ def create_db_connection(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME):
     return mydb
 
 
-
 def create_table(mydb, create_table_query):
     cursor = mydb.cursor()
     try:
@@ -27,7 +27,6 @@ def create_table(mydb, create_table_query):
         print(f"The error '{e}' occurred")
     finally:
         cursor.close()
-
 
 
 def drop_table(mydb, table_name):
@@ -42,15 +41,14 @@ def drop_table(mydb, table_name):
         cursor.close()
 
 
-
 def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
     cursor = mydb.cursor()
     try:
         query = f"SELECT * FROM {table_name} WHERE id = %s"
         cursor.execute(query, (id,))
-        
+
         result = cursor.fetchone()
-        
+
         if result:
             return result
         else:
@@ -63,8 +61,8 @@ def fetch_row_by_PRIMARY_KEY(mydb, table_name, id):
         cursor.close()
 
 
-
 import mysql.connector as mysql
+
 
 def save_user(mydb, name, username, password, email, age):
     my_cursor = mydb.cursor()
@@ -74,17 +72,16 @@ def save_user(mydb, name, username, password, email, age):
     INSERT INTO users (name, username, password, email, age)
     VALUES (%s, %s, %s, %s, %s);
     """
-    
+
     try:
         # اجرای دستور و اضافه کردن کاربر
         my_cursor.execute(add_user_query, (name, username, password, email, age))
-        mydb.commit() # تایید تغییرات
+        mydb.commit()  # تایید تغییرات
         print("User saved successfully.")
     except mysql.Error as err:
         print("Failed to insert user:", err)
     finally:
         my_cursor.close()
-
 
 
 def save_post(mydb, description, email, state, category, image_address, image_name, image_tags, user_id):
@@ -95,19 +92,18 @@ def save_post(mydb, description, email, state, category, image_address, image_na
     INSERT INTO posts (description, email, state, category, image_address, image_name, image_tags, user_id)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
     """
-    
+
     try:
         # اجرای دستور و اضافه کردن پست
-        my_cursor.execute(add_post_query, (description, email, state, category, image_address, image_name, image_tags, user_id))
-        mydb.commit() # تایید تغییرات
+        my_cursor.execute(add_post_query,
+                          (description, email, state, category, image_address, image_name, image_tags, user_id))
+        mydb.commit()  # تایید تغییرات
         print("Post saved successfully.")
         return my_cursor.lastrowid
     except mysql.Error as err:
         print("Failed to insert post:", err)
     finally:
         my_cursor.close()
-
-
 
 
 def get_user_id_by_username(db_connection, username):
@@ -121,7 +117,6 @@ def get_user_id_by_username(db_connection, username):
         return result[0]  # بازگرداندن id کاربر
     else:
         return None  # اگر کاربری با این username وجود نداشته باشد
-    
 
 
 def get_posts_by_user_id(db_connection, user_id):
@@ -181,7 +176,6 @@ def search_posts_tag_for_user(db_connection, username, query):
 
     cursor.close()
     return posts_list
-
 
 
 def search_posts_tag_for_all(db_connection, query):

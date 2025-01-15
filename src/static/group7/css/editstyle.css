@@ -1,0 +1,245 @@
+@font-face {
+    font-family: 'Vazir';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir.woff2') format('woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --text-color: #2c3e50;
+    --background-color: #ecf0f1;
+    --card-background: #ffffff;
+}
+
+body {
+    font-family: 'Vazir', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    direction: rtl;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: linear-gradient(45deg, #a8e6cf 0%, #dcedc1 50%, #ffd3b6 100%);
+    animation: gradientBG 15s ease infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+.profile-container {
+    max-width: 800px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1),
+                0 1px 8px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15),
+                0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 2.5rem;
+    font-size: 2.2rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.profile-container h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+form p {
+    margin: 0;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+form p:hover {
+    transform: translateX(-5px);
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+form p:hover label {
+    color: var(--primary-color);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form input[type="url"],
+form textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-family: 'Vazir', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+form input[type="file"] {
+    width: 100%;
+    padding: 1.5rem;
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+form input[type="file"]:hover {
+    border-color: var(--primary-color);
+    background: rgba(52, 152, 219, 0.05);
+}
+
+form input:focus,
+form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    transform: translateY(-2px);
+}
+
+.button-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.save-button,
+.cancel-button {
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Vazir', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+}
+
+.save-button {
+    background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+    color: white;
+}
+
+.cancel-button {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.save-button::before,
+.cancel-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.save-button:hover::before,
+.cancel-button:hover::before {
+    left: 100%;
+}
+
+.save-button:hover,
+.cancel-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+}
+
+.save-button:active,
+.cancel-button:active {
+    transform: translateY(-1px);
+}
+
+.errorlist {
+    color: #e74c3c;
+    list-style: none;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    padding: 0.8rem;
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: 8px;
+    border-right: 3px solid #e74c3c;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    .profile-container {
+        border-radius: 15px;
+        padding: 1.5rem;
+    }
+
+    .save-button,
+    .cancel-button {
+        padding: 0.8rem 1.5rem;
+    }
+
+    form {
+        gap: 1.5rem;
+    }
+}

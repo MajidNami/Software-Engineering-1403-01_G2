@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>کارت کلمه و مترادف‌ها</title>
+    <link rel="stylesheet" href="{% static 'group7/css/wordstyle.css' %}"/>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="word">{{ word.word }}</div>
+    <div class="synonyms">
+        <h3>مترادف‌ها:</h3>
+        <ul>
+            {% for synonym in word.synonyms %}
+                <li>{{ synonym }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+  <button class="back-button" onclick="location.href='{% url 'group7:user_profile' %}'">
+        <span class="back-icon">&#8592;</span> بازگشت
+    </button>
+</body>
+</html>
