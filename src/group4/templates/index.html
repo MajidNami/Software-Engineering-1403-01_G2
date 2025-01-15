@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../static/view/css/bootstrap.min.css"/>
+    <title>Spell Check</title>
+    <link rel="icon" href="../static/view/pencil_white.ico"/>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-dark navbar-expand-sm shadow-lg">
+    <div class="navbar-container">
+        <a href="#" class="navbar-brand">
+            <i class="fa fa-spell-check"></i>
+            وب اپلیکیشن تصحیح املا
+        </a>
+    </div>
+</nav>
+
+<!-- Header -->
+<header class="header">
+    <h1>✨ بررسی املای متن</h1>
+    <p>💡 متن خود را وارد کنید تا کلمات اشتباه را پیدا کنیم.</p>
+</header>
+
+<main>
+    <!-- Sidebar -->
+    <div class="sidebar " id="sidebar" >
+        <!-- Results will be displayed here -->
+        <div class="column" aria-hidden="true">
+            <h3>غلط های پیدا شده</h3>
+        </div>
+    </div>
+
+    <!-- Content Container -->
+    <div class="container">
+        <!-- Main Content -->
+        <div class="box">
+            <form id="textForm">
+                <textarea id="inputText"></textarea>
+                <button type="submit">
+                    جستوجوی غلط املایی
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+                <button type="button" id="addFileButton">
+                    افزودن فایل
+                </button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script src="../static/script.js"></script>
+
+</body>
+</html>
