@@ -42,10 +42,10 @@ Software-Engineering-1403-01_G2
 
 Here are some screenshots of the project:
 
-- [Screenshot 1](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image.png)
-- [Screenshot 2](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(3).png)
-- [Screenshot 3](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(1).png)
-- [Screenshot 4](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(2).png)
+![Screenshot 1](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image.png)
+![Screenshot 2](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(3).png)
+![Screenshot 3](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(1).png)
+![Screenshot 4](https://github.com/Hessam-Hosseinian/Software-Engineering-1403-01_G2/blob/main/Screenshots/image%20(2).png)
 
 ## Prerequisites
 
