@@ -9,9 +9,15 @@
 </head>
 <body>
     <div class="welcome-container">
-        <h1>خوش آمدید به گروه {{ group_number }}
-            میکروسرویس خود را اینجا توسعه دهید
-        </h1>
+        <h1>خوش آمدید به گروه {{ group_number }} میکروسرویس خود را اینجا توسعه دهید</h1>
+        
+        <!-- Add a button that links to the autocompletion page -->
+        <!-- <a href="{% url 'group1:autocomplete_page' %}">
+            <button>رفتن به صفحه تکمیل خودکار</button>
+        </a> -->
+        <a href="{% url 'group1:group_login' %}?next={% url 'group1:autocomplete_page' %}">
+            <button>رفتن به صفحه تکمیل خودکار</button>
+        </a>
     </div>
 </body>
 </html>
