@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیشنهاد کلمات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .suggestions {
+            margin-top: 15px;
+        }
+        .suggestions div {
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f7f7f7;
+            cursor: pointer;
+        }
+        .system-rating {
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .stars span {
+            cursor: pointer;
+            font-size: 24px;
+            color: #ddd;
+        }
+        .stars span.active {
+            color: #ffd700;
+        }
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>پیشنهاد کلمات</h1>
+    <div class="container">
+        <input type="text" id="inputText" placeholder="متن خود را وارد کنید..." onkeyup="fetchSuggestions()">
+        <div class="actions">
+            <button id="toggleSuggestions" onclick="toggleSuggestions()">خاموش کردن پیشنهادات</button>
+            <button onclick="downloadText()">دانلود متن</button>
+        </div>
+        <div class="suggestions" id="suggestions">پیشنهادات نمایش داده می‌شوند...</div>
+
+        <div class="system-rating">
+            <h3>نظر شما درباره عملکرد سیستم</h3>
+            <div class="stars" id="systemStars">
+                <span onclick="rateSystem(1)">★</span>
+                <span onclick="rateSystem(2)">★</span>
+                <span onclick="rateSystem(3)">★</span>
+                <span onclick="rateSystem(4)">★</span>
+                <span onclick="rateSystem(5)">★</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let suggestionsEnabled = true;
+
+        function toggleSuggestions() {
+            suggestionsEnabled = !suggestionsEnabled;
+            const toggleButton = document.getElementById("toggleSuggestions");
+            toggleButton.textContent = suggestionsEnabled ? "خاموش کردن پیشنهادات" : "روشن کردن پیشنهادات";
+            const suggestionsDiv = document.getElementById("suggestions");
+            suggestionsDiv.innerHTML = suggestionsEnabled ? "پیشنهادات نمایش داده می‌شوند..." : "پیشنهادات غیرفعال شده‌اند.";
+        }
+
+        async function fetchSuggestions() {
+            if (!suggestionsEnabled) return;
+            const text = document.getElementById("inputText").value;
+            if (!text.trim()) return;
+
+
+            const response = await fetch(`/group6/suggest/?text=${encodeURIComponent(text)}`);
+
+            const data = await response.json();
+
+            const suggestionsDiv = document.getElementById("suggestions");
+            suggestionsDiv.innerHTML = "";
+
+            if (data.suggestions.length > 0) {
+                data.suggestions.forEach(word => {
+                    const suggestionDiv = document.createElement("div");
+                    suggestionDiv.textContent = word;
+
+                    suggestionDiv.onclick = () => {
+                        const input = document.getElementById("inputText");
+                        input.value = input.value.trim() + " " + word + " ";
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                        fetchSuggestions();
+                    };
+
+                    suggestionsDiv.appendChild(suggestionDiv);
+                });
+            } else {
+                suggestionsDiv.textContent = "پیشنهادی برای این ورودی یافت نشد.";
+            }
+        }
+
+        async function rateSystem(rating) {
+            const stars = document.querySelectorAll('#systemStars span');
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+
+            const response = await fetch(`/group6/system-feedback/?rating=${rating}`);
+            const result = await response.json();
+            alert(result.message);
+        }
+
+        async function downloadText() {
+            const text = document.getElementById("inputText").value;
+            if (!text.trim()) {
+                alert("لطفا متنی وارد کنید.");
+                return;
+            }
+
+            window.location.href = `/group6/download-text/?text=${encodeURIComponent(text)}`;
+        }
+    </script>
+</body>
+</html>
